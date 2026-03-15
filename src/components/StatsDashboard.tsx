@@ -1,14 +1,14 @@
 import { usePlannerStore } from '../store/planner';
 import { StatType } from '../types';
 import { cn } from '../utils';
-import { Zap, Heart, Swords, Shield, Lightbulb } from 'lucide-react';
+import { Zap, Heart, Swords, Shield, Lightbulb, TrendingUp } from 'lucide-react';
 
-const statConfig: Record<StatType, { label: string; icon: typeof Zap; color: string }> = {
-  speed: { label: 'Speed', icon: Zap, color: 'text-red-500 bg-red-100' },
-  stamina: { label: 'Stamina', icon: Heart, color: 'text-green-500 bg-green-100' },
-  power: { label: 'Power', icon: Swords, color: 'text-orange-500 bg-orange-100' },
-  guts: { label: 'Guts', icon: Shield, color: 'text-blue-500 bg-blue-100' },
-  wisdom: { label: 'Wisdom', icon: Lightbulb, color: 'text-yellow-500 bg-yellow-100' },
+const statConfig: Record<StatType, { label: string; icon: typeof Zap; color: string; bgColor: string }> = {
+  speed: { label: 'Speed', icon: Zap, color: 'text-red-600', bgColor: 'bg-red-50' },
+  stamina: { label: 'Stamina', icon: Heart, color: 'text-green-600', bgColor: 'bg-green-50' },
+  power: { label: 'Power', icon: Swords, color: 'text-orange-600', bgColor: 'bg-orange-50' },
+  guts: { label: 'Guts', icon: Shield, color: 'text-blue-600', bgColor: 'bg-blue-50' },
+  wisdom: { label: 'Wisdom', icon: Lightbulb, color: 'text-yellow-600', bgColor: 'bg-yellow-50' },
 };
 
 export function StatsDashboard() {
@@ -21,13 +21,13 @@ export function StatsDashboard() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Stats</h2>
-        <span className="text-sm text-gray-600">
-          {totalRaces} races selected
+        <h2 className="text-base font-semibold text-slate-900">Stats</h2>
+        <span className="text-sm text-slate-500">
+          {totalRaces} races
         </span>
       </div>
       
-      <div className="grid grid-cols-5 gap-2">
+      <div className="grid grid-cols-5 gap-3">
         {(Object.keys(statConfig) as StatType[]).map(stat => {
           const config = statConfig[stat];
           const Icon = config.icon;
@@ -36,19 +36,18 @@ export function StatsDashboard() {
           return (
             <div 
               key={stat}
-              className="flex flex-col items-center p-3 rounded-lg border border-gray-200"
+              className={cn("flex flex-col items-center p-3 rounded-lg border border-slate-200", config.bgColor)}
             >
-              <div className={cn("p-2 rounded-full", config.color)}>
-                <Icon className="w-4 h-4" />
-              </div>
-              <span className="text-xs text-gray-500 mt-1">{config.label}</span>
-              <span className="text-lg font-bold">{value}</span>
+              <Icon className={cn("w-5 h-5", config.color)} />
+              <span className="text-xs text-slate-600 mt-1.5 font-medium">{config.label}</span>
+              <span className="text-xl font-bold text-slate-900 mt-0.5">{value}</span>
             </div>
           );
         })}
       </div>
       
-      <div className="text-xs text-gray-500 text-center">
+      <div className="flex items-center justify-center gap-2 text-xs text-slate-500 bg-slate-50 py-2 rounded">
+        <TrendingUp className="w-3 h-3" />
         Each race provides +10 to a random stat
       </div>
     </div>

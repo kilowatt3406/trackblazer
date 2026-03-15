@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { usePlannerStore, trailblazerEpithets } from '../store/planner';
 import { cn } from '../utils';
-import { Wand2, Loader2 } from 'lucide-react';
+import { Wand2, Loader2, Sparkles } from 'lucide-react';
 
 interface OptimizationResult {
   turn: number;
@@ -117,22 +117,23 @@ export function Optimizer() {
   
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Auto-Optimizer</h2>
+      <div className="flex items-center gap-2">
+        <Sparkles className="w-5 h-5 text-purple-500" />
+        <h2 className="text-base font-semibold text-slate-900">Auto-Optimizer</h2>
       </div>
       
-      <p className="text-xs text-gray-500">
-        Generate a race schedule based on your selected target epithets.
+      <p className="text-xs text-slate-500">
+        Generate an optimized race schedule based on your selected target epithets.
       </p>
       
       <button
         onClick={runOptimization}
         disabled={optimizing || selectedEpithetIds.length === 0}
         className={cn(
-          "w-full flex items-center justify-center gap-2 px-4 py-2 rounded font-medium",
+          "w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all duration-150",
           selectedEpithetIds.length === 0
-            ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-            : "bg-purple-600 text-white hover:bg-purple-700"
+            ? "bg-slate-100 text-slate-400 cursor-not-allowed"
+            : "bg-purple-600 text-white hover:bg-purple-700 shadow-sm hover:shadow"
         )}
       >
         {optimizing ? (
@@ -144,16 +145,25 @@ export function Optimizer() {
       </button>
       
       {selectedEpithetIds.length === 0 && (
-        <p className="text-xs text-amber-600">
+        <p className="text-xs text-amber-600 bg-amber-50 px-3 py-2 rounded">
           Select epithets from the Epithet Tracker first
         </p>
       )}
       
       {result && (
-        <div className="text-xs text-gray-500">
+        <div className="text-xs text-green-600 bg-green-50 px-3 py-2 rounded flex items-center gap-2">
+          <CheckIcon className="w-4 h-4" />
           Added {result.length} races to your schedule
         </div>
       )}
     </div>
+  );
+}
+
+function CheckIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+    </svg>
   );
 }

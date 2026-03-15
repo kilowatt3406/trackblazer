@@ -1,7 +1,13 @@
 import { useMemo } from 'react';
 import { usePlannerStore, trailblazerEpithets } from '../store/planner';
-import { cn, getRankColor, getRankLabel } from '../utils';
-import { Check, X } from 'lucide-react';
+import { cn, getRankLabel } from '../utils';
+import { Check, X, Target } from 'lucide-react';
+
+const rankColors: Record<1 | 2 | 3, { bg: string; text: string; border: string }> = {
+  1: { bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-200' },
+  2: { bg: 'bg-slate-50', text: 'text-slate-600', border: 'border-slate-200' },
+  3: { bg: 'bg-yellow-50', text: 'text-yellow-700', border: 'border-yellow-200' },
+};
 
 export function EpithetTracker() {
   const { selectedEpithetIds, toggleEpithet, getSelectedRaces } = usePlannerStore();
@@ -132,55 +138,65 @@ export function EpithetTracker() {
 
   const completedCount = Object.values(epithetProgress).filter(p => p.met).length;
   const totalCount = trailblazerEpithets.length;
+  const selectedCount = selectedEpithetIds.length;
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Epithets</h2>
-        <span className="text-sm text-gray-600">
-          {completedCount} / {totalCount} completed
-        </span>
+        <div className="flex items-center gap-2">
+          <Target className="w-5 h-5 text-slate-400" />
+          <h2 className="text-base font-semibold text-slate-900">Epithets</h2>
+        </div>
+        <div className="flex items-center gap-3 text-sm">
+          <span className="text-slate-500">{selectedCount} selected</span>
+          <span className="px-2 py-0.5 bg-green-100 text-green-700 rounded-full font-medium text-xs">
+            {completedCount}/{totalCount}
+          </span>
+        </div>
       </div>
       
-      <div className="text-xs text-gray-500 mb-2">
-        Select epithets to target. Progress updates as you select races.
+      <div className="text-xs text-slate-500">
+        Click to select target epithets. Progress updates as you select races.
       </div>
       
-      <div className="space-y-1 max-h-96 overflow-y-auto">
+      <div className="space-y-1 max-h-96 overflow-y-auto pr-1">
         {trailblazerEpithets.map(epithet => {
           const isSelected = selectedEpithetIds.includes(epithet.id);
           const progress = epithetProgress[epithet.id];
+          const colors = rankColors[epithet.rank];
           
           return (
             <button
               key={epithet.id}
               onClick={() => toggleEpithet(epithet.id)}
               className={cn(
-                "w-full flex items-center justify-between px-3 py-2 text-left rounded border text-sm",
+                "w-full flex items-center justify-between px-3 py-2.5 text-left rounded-lg border text-sm transition-all duration-150 cursor-pointer",
                 isSelected 
-                  ? "bg-blue-50 border-blue-300" 
-                  : "border-gray-200 hover:bg-gray-50"
+                  ? "bg-blue-50 border-blue-300 shadow-sm" 
+                  : "border-slate-200 hover:border-slate-300 hover:bg-slate-50"
               )}
             >
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2.5">
                 <span className={cn(
-                  "px-1.5 py-0.5 rounded text-xs font-medium",
-                  getRankColor(epithet.rank)
+                  "px-2 py-0.5 rounded text-xs font-semibold",
+                  colors.bg, colors.text
                 )}>
                   {getRankLabel(epithet.rank)}
                 </span>
-                <span className="font-medium">{epithet.name_en}</span>
+                <span className="font-medium text-slate-800">{epithet.name_en}</span>
               </div>
               <div className="flex items-center gap-2">
-                {progress && (
-                  <span className="text-xs text-gray-500">
+                {progress && isSelected && (
+                  <span className="text-xs text-slate-500 font-medium">
                     {progress.progress}/{progress.target}
                   </span>
                 )}
                 {progress?.met ? (
                   <Check className="w-4 h-4 text-green-500" />
-                ) : isSelected ? null : (
-                  <X className="w-4 h-4 text-gray-300" />
+                ) : isSelected ? (
+                  <div className="w-4 h-4 rounded-full border-2 border-blue-300" />
+                ) : (
+                  <X className="w-4 h-4 text-slate-300" />
                 )}
               </div>
             </button>

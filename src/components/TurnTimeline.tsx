@@ -1,108 +1,102 @@
-import { useState } from 'react';
 import { usePlannerStore } from '../store/planner';
-import { cn, getYearName, getMonthName, getGradeLabel, getTerrainLabel, getDistanceClass } from '../utils';
-import { Race, Turn } from '../types';
-import { ChevronDown, ChevronUp, AlertTriangle } from 'lucide-react';
+import { cn, getMonthName, getGradeLabel, getTerrainLabel } from '../utils';
+import { Turn } from '../types';
+import { AlertTriangle, X, Ban } from 'lucide-react';
 
 function TurnRow({ turn, consecutiveTurns }: { turn: Turn; consecutiveTurns: boolean }) {
-  const { toggleRace, clearTurn } = usePlannerStore();
-  const [expanded, setExpanded] = useState(turn.selectedRaceIds.length > 0);
+  const { selectRace, clearTurn } = usePlannerStore();
   
   const hasRaces = turn.availableRaces.length > 0;
-  const hasSelected = turn.selectedRaceIds.length > 0;
+  const selectedRaceId = turn.selectedRaceIds[0];
+  const selectedRace = selectedRaceId ? turn.availableRaces.find(r => r.id === selectedRaceId) : null;
   const isConsecutive = consecutiveTurns;
+
+  const handleRaceSelect = (raceId: number) => {
+    if (selectedRaceId === raceId) {
+      clearTurn(turn.turn);
+    } else {
+      selectRace(turn.turn, raceId);
+    }
+  };
 
   return (
     <div className={cn(
-      "border rounded-md overflow-hidden",
-      isConsecutive ? "border-amber-400 bg-amber-50" : "border-gray-200",
-      hasSelected && !isConsecutive && "bg-blue-50 border-blue-300"
+      "border-b border-slate-100 last:border-b-0 transition-colors duration-150",
+      isConsecutive ? "bg-amber-50/50" : hasRaces ? "bg-white" : "bg-slate-50"
     )}>
-      <div 
-        className="flex items-center justify-between px-3 py-2 cursor-pointer hover:bg-gray-50"
-        onClick={() => setExpanded(!expanded)}
-      >
-        <div className="flex items-center gap-3">
-          <span className="text-sm font-medium text-gray-600 w-16">
+      <div className="flex items-center px-4 py-3">
+        <div className="w-20 shrink-0">
+          <span className="text-sm font-semibold text-slate-700">
             Turn {turn.turn}
           </span>
-          <span className="text-xs text-gray-500">
-            {getYearName(turn.year)} {getMonthName(turn.month)} ({turn.half === 1 ? '1st' : '2nd'} half)
+        </div>
+        
+        <div className="w-40 shrink-0">
+          <span className="text-sm text-slate-500">
+            {getMonthName(turn.month)} ({turn.half === 1 ? '1st' : '2nd'})
           </span>
+        </div>
+        
+        <div className="flex-1 min-w-0">
+          {hasRaces ? (
+            <div className="flex flex-wrap gap-2">
+              {turn.availableRaces.map(race => (
+                <button
+                  key={race.id}
+                  onClick={() => handleRaceSelect(race.id)}
+                  className={cn(
+                    "flex items-center gap-2 px-3 py-1.5 text-sm rounded-md border transition-all duration-150 cursor-pointer",
+                    race.id === selectedRaceId
+                      ? "bg-blue-600 border-blue-600 text-white shadow-sm"
+                      : "border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-700"
+                  )}
+                >
+                  <span className={cn(
+                    "font-semibold text-xs",
+                    race.id === selectedRaceId 
+                      ? "text-white/80" 
+                      : race.grade === 100 ? "text-yellow-700" :
+                      race.grade === 200 ? "text-slate-600" :
+                      "text-orange-700"
+                  )}>
+                    {getGradeLabel(race.grade)}
+                  </span>
+                  <span className={cn("font-medium", race.id === selectedRaceId ? "text-white" : "text-slate-800")}>
+                    {race.name_en}
+                  </span>
+                  <span className={cn("text-xs", race.id === selectedRaceId ? "text-blue-200" : "text-slate-400")}>
+                    {getTerrainLabel(race.terrain)} · {race.distance}m
+                  </span>
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 text-slate-400">
+              <Ban className="w-4 h-4" />
+              <span className="text-sm">No races available</span>
+            </div>
+          )}
+        </div>
+        
+        <div className="w-32 shrink-0 flex items-center justify-end gap-2">
           {isConsecutive && (
-            <span className="flex items-center gap-1 text-xs text-amber-600">
+            <span className="flex items-center gap-1 text-xs font-medium text-amber-600 bg-amber-100 px-2 py-1 rounded">
               <AlertTriangle className="w-3 h-3" />
               3+ consecutive
             </span>
           )}
-        </div>
-        <div className="flex items-center gap-2">
-          {hasSelected && (
+          {selectedRace && (
             <button
-              onClick={(e) => { e.stopPropagation(); clearTurn(turn.turn); }}
-              className="text-xs text-red-500 hover:text-red-700"
+              onClick={() => clearTurn(turn.turn)}
+              className="flex items-center gap-1 text-xs text-red-600 hover:text-red-800 px-2 py-1 rounded hover:bg-red-50 transition-colors duration-150"
             >
+              <X className="w-3 h-3" />
               Clear
             </button>
           )}
-          {hasRaces ? (
-            <span className="text-xs text-gray-500">
-              {turn.availableRaces.length} race{turn.availableRaces.length !== 1 ? 's' : ''}
-              {hasSelected && ` (${turn.selectedRaceIds.length} selected)`}
-            </span>
-          ) : (
-            <span className="text-xs text-gray-400">No races</span>
-          )}
-          {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </div>
       </div>
-      
-      {expanded && hasRaces && (
-        <div className="border-t border-gray-200 p-2 bg-white">
-          <div className="grid gap-1">
-            {turn.availableRaces.map(race => (
-              <RaceOption 
-                key={race.id} 
-                race={race} 
-                selected={turn.selectedRaceIds.includes(race.id)}
-                onToggle={() => toggleRace(turn.turn, race.id)}
-              />
-            ))}
-          </div>
-        </div>
-      )}
     </div>
-  );
-}
-
-function RaceOption({ race, selected, onToggle }: { race: Race; selected: boolean; onToggle: () => void }) {
-  return (
-    <button
-      onClick={onToggle}
-      className={cn(
-        "flex items-center justify-between w-full px-3 py-2 text-left rounded border text-sm",
-        selected 
-          ? "bg-blue-100 border-blue-400 text-blue-900" 
-          : "border-gray-200 hover:bg-gray-50"
-      )}
-    >
-      <div className="flex items-center gap-2">
-        <span className={cn(
-          "font-medium px-1.5 py-0.5 rounded text-xs",
-          race.grade === 100 ? "bg-yellow-100 text-yellow-800" :
-          race.grade === 200 ? "bg-gray-100 text-gray-800" :
-          "bg-orange-100 text-orange-800"
-        )}>
-          {getGradeLabel(race.grade)}
-        </span>
-        <span className="font-medium">{race.name_en}</span>
-      </div>
-      <div className="flex items-center gap-3 text-xs text-gray-500">
-        <span>{getTerrainLabel(race.terrain)}</span>
-        <span>{race.distance}m</span>
-        <span className="capitalize">{getDistanceClass(race.distance)}</span>
-      </div>
-    </button>
   );
 }
 
@@ -122,11 +116,14 @@ export function TurnTimeline() {
   return (
     <div className="space-y-4">
       {years.map(({ year, turns: yearTurns }) => (
-        <div key={year} className="border rounded-lg overflow-hidden">
-          <div className="bg-gray-100 px-4 py-2 font-semibold text-gray-700">
-            {getYearName(year)} Year
+        <div key={year} className="border border-slate-200 rounded-xl overflow-hidden bg-white shadow-sm">
+          <div className="bg-slate-100 px-4 py-3 font-semibold text-slate-800 border-b border-slate-200 flex items-center gap-4">
+            <span className="w-20">Turn</span>
+            <span className="w-40">Month</span>
+            <span className="flex-1">Available Races</span>
+            <span className="w-32 text-right">Status</span>
           </div>
-          <div className="divide-y">
+          <div>
             {yearTurns.map(turn => (
               <TurnRow 
                 key={turn.turn} 

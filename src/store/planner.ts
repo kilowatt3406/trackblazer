@@ -8,6 +8,7 @@ interface PlannerState {
   currentPlan: Plan | null;
   
   toggleRace: (turn: number, raceId: number) => void;
+  selectRace: (turn: number, raceId: number) => void;
   clearTurn: (turn: number) => void;
   clearAllRaces: () => void;
   
@@ -46,6 +47,17 @@ export const usePlannerStore = create<PlannerState>((set, get) => ({
       }
       
       newTurns[turnIndex] = turnData;
+      return { turns: newTurns };
+    });
+  },
+
+  selectRace: (turn: number, raceId: number) => {
+    set(state => {
+      const newTurns = [...state.turns];
+      const turnIndex = newTurns.findIndex(t => t.turn === turn);
+      if (turnIndex === -1) return state;
+      
+      newTurns[turnIndex] = { ...newTurns[turnIndex], selectedRaceIds: [raceId] };
       return { turns: newTurns };
     });
   },
