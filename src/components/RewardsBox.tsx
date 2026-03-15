@@ -105,7 +105,7 @@ export function RewardsBox() {
                 Completed Epithets ({completedEpithets.length})
               </span>
             </div>
-            <div className="space-y-1">
+            <div className="space-y-1 max-h-96 overflow-y-auto">
               {completedEpithets
                 .sort((a, b) => b.rank - a.rank)
                 .map((epithet) => (
