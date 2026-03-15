@@ -1,5 +1,5 @@
 import { usePlannerStore } from "@/store/planner";
-import { cn, getMonthName, getGradeLabel, getTerrainLabel } from "@/utils";
+import { cn, getMonthName, getGradeLabel, getTerrainLabel, getDistanceClass, capitalize } from "@/utils";
 import { Turn } from "@/types";
 import { AlertTriangle, X, Ban } from "lucide-react";
 
@@ -103,7 +103,7 @@ function TurnRow({
                     )}
                   >
                     {getTerrainLabel(turnRace.race.terrain)} ·{" "}
-                    {turnRace.race.distance}m
+                    {capitalize(getDistanceClass(turnRace.race.distance))}
                   </span>
                 </button>
               ))}

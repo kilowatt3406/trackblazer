@@ -5,6 +5,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export function capitalize(str: string): string {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 export function getYearName(year: 1 | 2 | 3): string {
   const names: Record<1 | 2 | 3, string> = {
     1: "Junior",
