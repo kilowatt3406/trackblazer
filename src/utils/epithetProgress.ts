@@ -13,36 +13,16 @@ export type {
 export function calculateEpithetProgress(
   selectedRaces: SelectedRace[],
 ): EpithetProgress[] {
-  const epithetResults = new Map<number, EpithetProgress>();
-
-  for (const epithet of epithetRequirements) {
-    let totalProgress = 0;
-    let totalTarget = 0;
-    const allMissing: string[] = [];
-    let met = true;
-
+  return epithetRequirements.map((epithet): EpithetProgress => {
     const result = epithet.check(selectedRaces);
-
-    totalProgress += result.progress || 0;
-    totalTarget += result.target || 0;
-    allMissing.push(...(result.missing || []));
-
-    if (!isMet(result)) {
-      met = false;
-    }
-
-    const progress: EpithetProgress = {
+    return {
       epithet,
-      met,
-      progress: totalProgress,
-      target: totalTarget,
-      missing: allMissing,
+      met: isMet(result),
+      progress: result.progress || 0,
+      target: result.target || 0,
+      missing: result.missing || [],
     };
-
-    epithetResults.set(epithet.id, progress);
-  }
-
-  return Array.from(epithetResults.values());
+  });
 }
 
 export { epithetRequirements };
