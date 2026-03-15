@@ -36,13 +36,17 @@ export function EpithetItem({
   
   const Container = onClick ? 'button' : 'div';
   
+  const showProgress = (selected || complete) && progress !== undefined && target !== undefined;
+  
   return (
     <Container
       onClick={onClick}
       className={cn(
         "w-full flex items-center justify-between px-3 py-2.5 text-left rounded-lg border text-sm transition-all duration-150",
-        selected && !complete ? "bg-blue-50 border-blue-300 shadow-sm" : "border-slate-200 hover:border-slate-300 hover:bg-slate-50",
-        complete && "bg-green-50 border-green-200",
+        complete && selected ? "bg-gradient-to-r from-green-50 to-blue-50 border-green-300 border-l-4" : 
+        complete ? "bg-green-50 border-green-200" : 
+        selected ? "bg-blue-50 border-blue-300 shadow-sm border-l-4" : 
+        "border-slate-200 hover:border-slate-300 hover:bg-slate-50",
         onClick && "cursor-pointer"
       )}
     >
@@ -53,7 +57,7 @@ export function EpithetItem({
         <span className="font-medium text-slate-800 truncate">{name}</span>
       </div>
       <div className="flex items-center gap-2 shrink-0">
-        {(selected || complete) && progress !== undefined && target !== undefined && (
+        {showProgress && (
           <span className="text-xs text-slate-500 font-medium">
             {progress}/{target}
           </span>
