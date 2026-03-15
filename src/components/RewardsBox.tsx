@@ -8,7 +8,11 @@ import { EpithetItem } from "./EpithetItem";
 interface RewardSummary {
   totalStatValue: number;
   skills: { id: number; name: string; hints: number }[];
-  completedEpithets: { name_en_gl: string; rank: 1 | 2 | 3 }[];
+  completedEpithets: {
+    name_en_gl: string;
+    rank: 1 | 2 | 3;
+    description?: string;
+  }[];
 }
 
 export function RewardsBox() {
@@ -51,6 +55,7 @@ export function RewardsBox() {
     const completedEpithets = metEpithets.map((p) => ({
       name_en_gl: p.epithet.name_en_gl,
       rank: p.epithet.rank,
+      description: p.epithet.description,
     }));
 
     return { totalStatValue, skills, completedEpithets };
@@ -108,6 +113,7 @@ export function RewardsBox() {
                     key={epithet.name_en_gl}
                     name={epithet.name_en_gl}
                     rank={epithet.rank}
+                    description={epithet.description}
                     complete
                   />
                 ))}

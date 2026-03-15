@@ -25,6 +25,7 @@ export interface EpithetDefinition {
   name_en: string;
   name_en_gl: string;
   rank: 1 | 2 | 3;
+  description?: string;
   rewards?: Reward[];
   check: EpithetMatcher;
 }
@@ -205,6 +206,8 @@ export const epithetRequirements: EpithetDefinition[] = [
     name_en: "Legendary Horsegirl",
     name_en_gl: "Legendary",
     rank: 3,
+    description:
+      "Obtain the Spring Champion and Fall Champion epithets, and either the Stunning or Lady epithet.",
     check: (races) =>
       all(
         allEpithets("Stunning", "Lady"),
@@ -217,6 +220,8 @@ export const epithetRequirements: EpithetDefinition[] = [
     name_en: "Divine Speed Miler",
     name_en_gl: "Mile a Minute",
     rank: 3,
+    description:
+      "Win the NHK Mile Cup, Oka Sho, Yasuda Kinen, Victoria Mile, and Mile Ch., and either Hanshin J.F. or Asahi Hai F.S.",
     check: all(
       all(
         anyRace("164"), // NHK Mile Cup
@@ -234,6 +239,7 @@ export const epithetRequirements: EpithetDefinition[] = [
     name_en: "Highspeed Miler",
     name_en_gl: "Breakneck Miler",
     rank: 3,
+    description: "Win the NHK Mile Cup, Yasuda Kinen, and Mile Ch.",
     check: all(
       anyRace("164"), // NHK Mile Cup
       anyRace("73", "73_2"), // Yasuda Kinen
@@ -246,6 +252,8 @@ export const epithetRequirements: EpithetDefinition[] = [
     name_en: "Best Horsegirl",
     name_en_gl: "Phenomenal",
     rank: 3,
+    description:
+      "Get Stunning epithet & win 2: Tenno Sho (Spring/Autumn), Takarazuka Kinen, Japan Cup, Osaka Hai, Arima Kinen",
     check: (races) =>
       all(
         anyEpithet("Stunning"),
@@ -265,6 +273,8 @@ export const epithetRequirements: EpithetDefinition[] = [
     name_en: "Wonderful Horsegirl",
     name_en_gl: "Incredible",
     rank: 3,
+    description:
+      "Obtain the Stunning epithet and win the Japan Cup (Classic Year) or Arima Kinen (Classic Year)",
     check: (races) =>
       all(
         anyEpithet("Stunning"),
@@ -277,6 +287,7 @@ export const epithetRequirements: EpithetDefinition[] = [
     name_en: "Charismatic Horsegirl",
     name_en_gl: "Stunning",
     rank: 2,
+    description: "Win the Satsuki Sho, Japanese Derby, and Kikuka Sho",
     check: allRaces(
       "163", // Satsuki Sho
       "166", // Japanese Derby
@@ -289,6 +300,7 @@ export const epithetRequirements: EpithetDefinition[] = [
     name_en: "Virtuoso Sprinter",
     name_en_gl: "Sprint Go-Getter",
     rank: 2,
+    description: "Win the Takamatsunomiya Kinen and Sprinters Stakes",
     check: all(
       anyRace("2"), // Takamatsunomiya Kinen
       anyRace("75", "75_2"), // Sprinters Stakes
@@ -300,6 +312,7 @@ export const epithetRequirements: EpithetDefinition[] = [
     name_en: "Dirt G1 Champion",
     name_en_gl: "Dirt G1 Dominator",
     rank: 3,
+    description: "Win 9 G1 dirt races",
     check: matchCount(9, { grade: 100, terrain: 2 }),
     rewards: [{ t: "sk", d: 201672, v: "+1" }],
   },
@@ -308,6 +321,7 @@ export const epithetRequirements: EpithetDefinition[] = [
     name_en: "Dirt G1 Sovereign",
     name_en_gl: "Dirt G1 Powerhouse",
     rank: 2,
+    description: "Win 5 G1 dirt races",
     check: matchCount(5, { grade: 100, terrain: 2 }),
     rewards: [{ t: "rs", d: 2, v: "+15" }],
   },
@@ -316,6 +330,7 @@ export const epithetRequirements: EpithetDefinition[] = [
     name_en: "Dirt G1 Monster",
     name_en_gl: "Dirt G1 Star",
     rank: 2,
+    description: "Win 4 G1 dirt races",
     check: matchCount(4, { grade: 100, terrain: 2 }),
     rewards: [{ t: "rs", d: 2, v: "+10" }],
   },
@@ -324,6 +339,7 @@ export const epithetRequirements: EpithetDefinition[] = [
     name_en: "Dirt G1 Braver",
     name_en_gl: "Dirt G1 Achiever",
     rank: 2,
+    description: "Win 3 G1 dirt races",
     check: matchCount(3, { grade: 100, terrain: 2 }),
     rewards: [{ t: "rs", d: 2, v: "+10" }],
   },
@@ -332,6 +348,8 @@ export const epithetRequirements: EpithetDefinition[] = [
     name_en: "Queen Horsegirl",
     name_en_gl: "Goddess",
     rank: 3,
+    description:
+      "Obtain the Lady epithet, win the Victoria Mile and Hanshin J.F., and win the Queen Elizabeth II Cup 2 times in a row",
     check: (races) =>
       all(
         anyEpithet("Lady"),
@@ -346,6 +364,8 @@ export const epithetRequirements: EpithetDefinition[] = [
     name_en: "Princess Horsegirl",
     name_en_gl: "Heroine",
     rank: 3,
+    description:
+      "Obtain the Lady epithet and win the Queen Elizabeth II Cup (Classic Year)",
     check: (races) =>
       all(
         anyEpithet("Lady"),
@@ -358,6 +378,7 @@ export const epithetRequirements: EpithetDefinition[] = [
     name_en: "Heroine",
     name_en_gl: "Lady",
     rank: 2,
+    description: "Win the Oka Sho, Japanese Oaks, and Shuka Sho",
     check: allRaces("162", "165", "167"), // Triple Tiara
     rewards: [{ t: "rs", d: 2, v: "+10" }],
   },
@@ -366,6 +387,8 @@ export const epithetRequirements: EpithetDefinition[] = [
     name_en: "Lightspeed Sprinter",
     name_en_gl: "Sprint Speedster",
     rank: 2,
+    description:
+      "Win the Takamatsunomiya Kinen, Sprinters Stakes, Yasuda Kinen, and Mile Ch.",
     check: all(
       anyRace("2"), // Takamatsunomiya Kinen
       anyRace("75", "75_2"), // Sprinters Stakes
@@ -379,6 +402,7 @@ export const epithetRequirements: EpithetDefinition[] = [
     name_en: "Shield Champion",
     name_en_gl: "Shield Bearer",
     rank: 2,
+    description: "Win the Tenno Sho (Spring) and Tenno Sho (Autumn)",
     check: all(
       anyRace("4"), // Tenno Sho (Spring)
       anyRace("76", "76_2"), // Tenno Sho (Autumn)
@@ -390,6 +414,7 @@ export const epithetRequirements: EpithetDefinition[] = [
     name_en: "Spring Champion",
     name_en_gl: "Spring Champion",
     rank: 2,
+    description: "Win the Osaka Hai, Tenno Sho (Spring), and Takarazuka Kinen",
     check: allRaces(
       "3", // Osaka Hai
       "4", // Tenno Sho (Spring)
@@ -402,6 +427,7 @@ export const epithetRequirements: EpithetDefinition[] = [
     name_en: "Autumn Champion",
     name_en_gl: "Fall Champion",
     rank: 2,
+    description: "Win the Tenno Sho (Autumn), Japan Cup, and Arima Kinen",
     check: allRaces(
       "76_2", // Tenno Sho (Autumn) (Senior)
       "79_2", // Japan Cup (Senior)
@@ -414,6 +440,7 @@ export const epithetRequirements: EpithetDefinition[] = [
     name_en: "Dirt Master",
     name_en_gl: "Eat My Dust",
     rank: 3,
+    description: "Win 15 dirt races",
     check: matchCount(15, { terrain: 2 }),
     rewards: [{ t: "rs", d: 2, v: "+10" }],
   },
@@ -422,6 +449,7 @@ export const epithetRequirements: EpithetDefinition[] = [
     name_en: "Dirt Connoisseur",
     name_en_gl: "Playing Dirty",
     rank: 2,
+    description: "Win 10 dirt races",
     check: matchCount(10, { terrain: 2 }),
     rewards: [{ t: "rs", d: 2, v: "+10" }],
   },
@@ -430,6 +458,7 @@ export const epithetRequirements: EpithetDefinition[] = [
     name_en: "Dirt Adept",
     name_en_gl: "Dirty Work",
     rank: 2,
+    description: "Win 5 dirt races",
     check: matchCount(5, { terrain: 2 }),
     rewards: [{ t: "rs", d: 2, v: "+5" }],
   },
@@ -438,9 +467,8 @@ export const epithetRequirements: EpithetDefinition[] = [
     name_en: "Core Distance Champion",
     name_en_gl: "Standard Distance Leader",
     rank: 2,
-    check(races) {
-      return hasStandardCount(races, 10);
-    },
+    description: "Win 10 standard distance races",
+    check: (races) => hasStandardCount(races, 10),
     rewards: [{ t: "rs", d: 2, v: "+10" }],
   },
   {
@@ -448,9 +476,8 @@ export const epithetRequirements: EpithetDefinition[] = [
     name_en: "Non-Core Distance Champion",
     name_en_gl: "Non-Standard Distance Leader",
     rank: 2,
-    check(races) {
-      return hasNonStandardCount(races, 10);
-    },
+    description: "Win 10 non-standard distance races",
+    check: (races) => hasNonStandardCount(races, 10),
     rewards: [{ t: "rs", d: 2, v: "+10" }],
   },
   {
@@ -458,6 +485,7 @@ export const epithetRequirements: EpithetDefinition[] = [
     name_en: "Dirt Sprinter",
     name_en_gl: "Dirt Sprinter",
     rank: 2,
+    description: "Win the JBC Sprint 2 times in a row",
     check: allRaces("1025", "1025_2"), // JBC Sprint
     rewards: [{ t: "rs", d: 2, v: "+10" }],
   },
@@ -466,6 +494,7 @@ export const epithetRequirements: EpithetDefinition[] = [
     name_en: "Delicate Horsegirl",
     name_en_gl: "Umatastic",
     rank: 2,
+    description: "Win 3 races that have Umamusume Stakes in the name",
     check(races) {
       const target = 3;
       const progress = races.filter((sr) =>
@@ -484,6 +513,7 @@ export const epithetRequirements: EpithetDefinition[] = [
     name_en: "Dirt Rising Star",
     name_en_gl: "Kicking Up Dust",
     rank: 2,
+    description: "Win the Unicorn Stakes, Leopard Stakes, and Japan Dirt Derby",
     check: allRaces(
       "189", // Unicorn Stakes
       "191", // Leopard Stakes
@@ -496,13 +526,16 @@ export const epithetRequirements: EpithetDefinition[] = [
     name_en: "Ms. Worldwide",
     name_en_gl: "Globe-Trotter",
     rank: 2,
+    description: "Win 3 races that have a country in the name",
     check: count(3, [
+      anyRace("8"), // American JCC
+      anyRace("79", "79_2"), // Japan Cup
+      anyRace("90", "90_2"), // Copa Republica Argentina
       anyRace("165"), // Japanese Oaks
       anyRace("166"), // Japanese Derby
-      anyRace("79", "79_2"), // Japan Cup
+      anyRace("172"), // New Zealand Trophy
+      anyRace("632"), // Saudi Arabia Royal Cup
       anyRace("1023"), // Japan Dirt Derby
-      anyRace("90", "90_2"), // Copa Republica Argentina
-      anyRace("8"), // American JCC
     ]),
     rewards: [{ t: "rs", d: 2, v: "+5" }],
   },
@@ -511,6 +544,7 @@ export const epithetRequirements: EpithetDefinition[] = [
     name_en: "Junior Horsegirl",
     name_en_gl: "Junior Jewel",
     rank: 2,
+    description: "Win 3 races that have Junior Stakes in the name",
     check(races) {
       const target = 3;
       const progress = races.filter((sr) =>
@@ -529,6 +563,7 @@ export const epithetRequirements: EpithetDefinition[] = [
     name_en: "Famous Horsegirl",
     name_en_gl: "Turf Tussler",
     rank: 2,
+    description: "Win a turf sprint, mile, medium, and long race",
     check: all(
       matchCount(1, { terrain: 1, distanceCategory: "short" }),
       matchCount(1, { terrain: 1, distanceCategory: "mile" }),
@@ -542,6 +577,7 @@ export const epithetRequirements: EpithetDefinition[] = [
     name_en: "Expert Horsegirl",
     name_en_gl: "Dirt Dancer",
     rank: 2,
+    description: "Win a dirt sprint, mile, and medium race",
     check: all(
       matchCount(1, { terrain: 2, distanceCategory: "short" }),
       matchCount(1, { terrain: 2, distanceCategory: "mile" }),
@@ -554,6 +590,7 @@ export const epithetRequirements: EpithetDefinition[] = [
     name_en: "Veteran Horsegirl",
     name_en_gl: "Pro Racer",
     rank: 1,
+    description: "Win 10 OP level or higher races",
     check(races) {
       const target = 10;
       const progress = races.filter((sr) => sr.race.grade < 400).length;
@@ -570,6 +607,7 @@ export const epithetRequirements: EpithetDefinition[] = [
     name_en: "Hokkaido Master",
     name_en_gl: "Hokkaido Hotshot",
     rank: 1,
+    description: "Win 3 graded races held at Sapporo or Hakodate",
     check: trackCount(3, [
       10001, // Sapporo
       10002, // Hakodate
@@ -581,6 +619,7 @@ export const epithetRequirements: EpithetDefinition[] = [
     name_en: "Tohoku Master",
     name_en_gl: "Tohoku Top Dog",
     rank: 1,
+    description: "Win 3 graded races held at Fukushima or Niigata",
     check: trackCount(3, [
       10003, // Niigata
       10004, // Fukushima
@@ -592,6 +631,7 @@ export const epithetRequirements: EpithetDefinition[] = [
     name_en: "Kanto Master",
     name_en_gl: "Kanto Conqueror",
     rank: 1,
+    description: "Win 3 graded races held at Tokyo, Nakayama, or Oi",
     check: trackCount(3, [
       10005, // Nakayama
       10006, // Tokyo
@@ -604,6 +644,7 @@ export const epithetRequirements: EpithetDefinition[] = [
     name_en: "West Japan Master",
     name_en_gl: "West Japan Whiz",
     rank: 1,
+    description: "Win 3 graded races held at Chukyo, Hanshin, or Kyoto",
     check: trackCount(3, [
       10007, // Chukyo
       10009, // Hanshin
@@ -616,7 +657,8 @@ export const epithetRequirements: EpithetDefinition[] = [
     name_en: "Kokura Master",
     name_en_gl: "Kokura Constable",
     rank: 1,
-    check: trackCount(3, [
+    description: "Win 2 graded races held at Kokura",
+    check: trackCount(2, [
       10010, // Kokura
     ]),
     rewards: [{ t: "rs", d: 2, v: "+5" }],

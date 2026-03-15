@@ -42,7 +42,7 @@ export function EpithetTracker() {
         Click to select target epithets. Progress updates as you select races.
       </div>
 
-      <div className="space-y-1 max-h-96 overflow-y-auto pr-1">
+      <div className="space-y-1 max-h-96 overflow-y-auto pr-1 [&>*]:overflow-visible">
         {epithetProgressList
           .sort((a, b) => {
             if (a.met !== b.met) return a.met ? -1 : 1;
@@ -61,6 +61,7 @@ export function EpithetTracker() {
                 key={epithet.id}
                 name={name}
                 rank={epithet.rank}
+                description={epithet.description}
                 selected={isSelected}
                 complete={met}
                 progress={progress}
