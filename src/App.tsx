@@ -142,7 +142,7 @@ function App() {
             )}
 
             {viewMode === "full" && (
-              <div className="w-full lg:w-80 shrink-0 space-y-4">
+              <div className="w-full lg:w-80 shrink-0 space-y-4 lg:sticky lg:top-6 lg:self-start">
                 <div className="bg-white rounded-lg border border-slate-200 p-5">
                   <RewardsBox />
                 </div>
