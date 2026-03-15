@@ -219,13 +219,11 @@ export const epithetRequirements: EpithetDefinition[] = [
     description:
       "Win the NHK Mile Cup, Oka Sho, Yasuda Kinen, Victoria Mile, and Mile Ch., and either Hanshin J.F. or Asahi Hai F.S.",
     check: all(
-      all(
-        anyRace("164"), // NHK Mile Cup
-        anyRace("162"), // Oka Sho
-        anyRace("73", "73_2"), // Yasuda Kinen
-        anyRace("5"), // Victoria Mile
-        anyRace("78", "78_2"), // Mile Championship
-      ),
+      anyRace("164"), // NHK Mile Cup
+      anyRace("162"), // Oka Sho
+      anyRace("73", "73_2"), // Yasuda Kinen
+      anyRace("5"), // Victoria Mile
+      anyRace("78", "78_2"), // Mile Championship
       anyRace("623", "624"), // Hanshin J.F. / Asahi Hai F.S.
     ),
     rewards: [{ t: "sk", d: 201032, v: "+1" }],
