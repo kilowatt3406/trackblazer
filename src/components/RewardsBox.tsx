@@ -1,23 +1,41 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { usePlannerStore } from "@/store/planner";
 import { skillNames } from "@/data/epithetRequirements";
 import { calculateEpithetProgress } from "@/utils/epithetProgress";
-import { Trophy, Star, BookOpen } from "lucide-react";
+import { Trophy, Star, BookOpen, Zap, Info } from "lucide-react";
 import { EpithetItem } from "./EpithetItem";
 
+const GRADE_STATS: Record<number, number> = {
+  100: 10,
+  200: 8,
+  300: 5,
+};
+
+const RACE_BONUS = 1.5;
+
 interface RewardSummary {
-  totalStatValue: number;
   skills: { id: number; name: string; hints: number }[];
   completedEpithets: {
     name_en_gl: string;
     rank: 1 | 2 | 3;
     description?: string;
   }[];
+  raceStats: {
+    g1Count: number;
+    g2Count: number;
+    g3Count: number;
+    g1Total: number;
+    g2Total: number;
+    g3Total: number;
+    epithetBonus: number;
+    total: number;
+  };
 }
 
 export function RewardsBox() {
   const { getSelectedRaces } = usePlannerStore();
   const selectedRaces = getSelectedRaces();
+  const [showRaceTooltip, setShowRaceTooltip] = useState(false);
 
   const rewardSummary = useMemo((): RewardSummary => {
     const selectedWithUra = selectedRaces.map((sr) => ({
@@ -30,7 +48,7 @@ export function RewardsBox() {
 
     const metEpithets = progressList.filter((p) => p.met);
 
-    let totalStatValue = 0;
+    let epithetStatValue = 0;
     const skillMap = new Map<number, number>();
 
     for (const { epithet } of metEpithets) {
@@ -38,7 +56,7 @@ export function RewardsBox() {
 
       for (const reward of rewards) {
         if (reward.t === "rs") {
-          totalStatValue += parseInt(reward.v) * reward.d;
+          epithetStatValue += parseInt(reward.v) * reward.d;
         } else if (reward.t === "sk") {
           const current = skillMap.get(reward.d) || 0;
           skillMap.set(reward.d, current + parseInt(reward.v));
@@ -58,10 +76,28 @@ export function RewardsBox() {
       description: p.epithet.description,
     }));
 
-    return { totalStatValue, skills, completedEpithets };
+    const g1Count = selectedRaces.filter((r) => r.race.grade === 100).length;
+    const g2Count = selectedRaces.filter((r) => r.race.grade === 200).length;
+    const g3Count = selectedRaces.filter((r) => r.race.grade === 300).length;
+    const g1Total = Math.round(GRADE_STATS[100] * RACE_BONUS) * g1Count;
+    const g2Total = Math.round(GRADE_STATS[200] * RACE_BONUS) * g2Count;
+    const g3Total = Math.round(GRADE_STATS[300] * RACE_BONUS) * g3Count;
+    const raceBonusTotal = g1Total + g2Total + g3Total;
+    const raceStats = {
+      g1Count,
+      g2Count,
+      g3Count,
+      g1Total,
+      g2Total,
+      g3Total,
+      epithetBonus: epithetStatValue,
+      total: raceBonusTotal + epithetStatValue,
+    };
+
+    return { skills, completedEpithets, raceStats };
   }, [selectedRaces]);
 
-  const { totalStatValue, skills, completedEpithets } = rewardSummary;
+  const { skills, completedEpithets, raceStats } = rewardSummary;
 
   return (
     <div className="space-y-4">
@@ -73,14 +109,67 @@ export function RewardsBox() {
       </div>
 
       <div className="space-y-3">
-        {totalStatValue > 0 && (
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-slate-600 dark:text-slate-400">
-              Total Stats
-            </span>
-            <span className="text-sm font-medium text-slate-900 dark:text-white">
-              +{totalStatValue}
-            </span>
+        {raceStats.total > 0 && (
+          <div className="pt-2 border-t border-slate-100 dark:border-slate-700">
+            <div className="flex items-center gap-2 mb-2">
+              <Zap className="w-4 h-4 text-yellow-500" />
+              <span className="text-sm text-slate-600 dark:text-slate-400">
+                Random Stats
+              </span>
+              <div className="relative">
+                <Info
+                  className="w-3.5 h-3.5 text-slate-400 cursor-help"
+                  onMouseEnter={() => setShowRaceTooltip(true)}
+                  onMouseLeave={() => setShowRaceTooltip(false)}
+                />
+                {showRaceTooltip && (
+                  <div className="absolute z-50 left-0 top-full mt-2 w-64 p-2 bg-slate-800 text-white text-xs rounded shadow-lg">
+                    Reward values assume a 50% race bonus from support cards.
+                    Does not include bonuses from cleat hammers.
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="text-sm space-y-1">
+              {raceStats.g1Count > 0 && (
+                <div className="flex justify-between">
+                  <span className="text-slate-600 dark:text-slate-400">
+                    G1 ×{raceStats.g1Count}
+                  </span>
+                  <span className="text-slate-500">+{raceStats.g1Total}</span>
+                </div>
+              )}
+              {raceStats.g2Count > 0 && (
+                <div className="flex justify-between">
+                  <span className="text-slate-600 dark:text-slate-400">
+                    G2 ×{raceStats.g2Count}
+                  </span>
+                  <span className="text-slate-500">+{raceStats.g2Total}</span>
+                </div>
+              )}
+              {raceStats.g3Count > 0 && (
+                <div className="flex justify-between">
+                  <span className="text-slate-600 dark:text-slate-400">
+                    G3 ×{raceStats.g3Count}
+                  </span>
+                  <span className="text-slate-500">+{raceStats.g3Total}</span>
+                </div>
+              )}
+              {raceStats.epithetBonus > 0 && (
+                <div className="flex justify-between">
+                  <span className="text-slate-600 dark:text-slate-400">
+                    Epithets
+                  </span>
+                  <span className="text-slate-500">
+                    +{raceStats.epithetBonus}
+                  </span>
+                </div>
+              )}
+              <div className="flex justify-between font-medium text-slate-800 dark:text-white pt-1 border-t border-slate-200 dark:border-slate-600">
+                <span>Total</span>
+                <span>+{raceStats.total}</span>
+              </div>
+            </div>
           </div>
         )}
 
@@ -131,9 +220,9 @@ export function RewardsBox() {
           </div>
         )}
 
-        {totalStatValue === 0 &&
-          skills.length === 0 &&
-          completedEpithets.length === 0 && (
+        {skills.length === 0 &&
+          completedEpithets.length === 0 &&
+          raceStats.total === 0 && (
             <div className="text-sm text-slate-400 dark:text-slate-500">
               No rewards yet
             </div>
