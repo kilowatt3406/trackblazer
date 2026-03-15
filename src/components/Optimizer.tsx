@@ -134,12 +134,12 @@ export function Optimizer() {
     <div className="space-y-4">
       <div className="flex items-center gap-2">
         <Sparkles className="w-5 h-5 text-purple-500" />
-        <h2 className="text-base font-semibold text-slate-900">
+        <h2 className="text-base font-semibold text-slate-900 dark:text-white">
           Auto-Optimizer
         </h2>
       </div>
 
-      <p className="text-xs text-slate-500">
+      <p className="text-xs text-slate-500 dark:text-slate-400">
         Generate an optimized race schedule based on your selected target
         epithets.
       </p>
@@ -150,7 +150,7 @@ export function Optimizer() {
         className={cn(
           "w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all duration-150",
           selectedEpithetIds.length === 0
-            ? "bg-slate-100 text-slate-400 cursor-not-allowed"
+            ? "bg-slate-100 dark:bg-slate-700 text-slate-400 dark:text-slate-500 cursor-not-allowed"
             : "bg-purple-600 text-white hover:bg-purple-700 shadow-sm hover:shadow",
         )}
       >
@@ -163,13 +163,13 @@ export function Optimizer() {
       </button>
 
       {selectedEpithetIds.length === 0 && (
-        <p className="text-xs text-amber-600 bg-amber-50 px-3 py-2 rounded">
+        <p className="text-xs text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/40 px-3 py-2 rounded">
           Select epithets from the Epithet Tracker first
         </p>
       )}
 
       {result && (
-        <div className="text-xs text-green-600 bg-green-50 px-3 py-2 rounded flex items-center gap-2">
+        <div className="text-xs text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/40 px-3 py-2 rounded flex items-center gap-2">
           <CheckIcon className="w-4 h-4" />
           Added {result.length} races to your schedule
         </div>

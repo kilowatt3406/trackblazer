@@ -49,19 +49,19 @@ export function SaveLoad() {
     <div className="space-y-4">
       <div className="flex items-center gap-2">
         <Save className="w-5 h-5 text-slate-400" />
-        <h2 className="text-base font-semibold text-slate-900">Save / Load</h2>
+        <h2 className="text-base font-semibold text-slate-900 dark:text-white">Save / Load</h2>
       </div>
 
       <div className="flex gap-2">
         <button
           onClick={handleExport}
-          className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg border border-slate-300 hover:bg-slate-50 text-sm font-medium text-slate-700 transition-colors duration-150"
+          className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 text-sm font-medium text-slate-700 dark:text-slate-300 transition-colors duration-150"
         >
           <Download className="w-4 h-4" />
           Export
         </button>
 
-        <label className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg border border-slate-300 hover:bg-slate-50 text-sm font-medium text-slate-700 cursor-pointer transition-colors duration-150">
+        <label className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer transition-colors duration-150">
           <FolderOpen className="w-4 h-4" />
           Import
           <input
@@ -79,8 +79,8 @@ export function SaveLoad() {
           className={cn(
             "text-sm px-3 py-2 rounded-lg",
             message.type === "success"
-              ? "bg-green-50 text-green-700 border border-green-200"
-              : "bg-red-50 text-red-700 border border-red-200",
+              ? "bg-green-50 dark:bg-green-900/40 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-800"
+              : "bg-red-50 dark:bg-red-900/40 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800",
           )}
         >
           {message.text}

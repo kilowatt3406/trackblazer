@@ -33,25 +33,25 @@ function TurnRow({
   return (
     <div
       className={cn(
-        "border-b border-slate-100 last:border-b-0 transition-colors duration-150",
+        "border-b border-slate-100 dark:border-slate-700 last:border-b-0 transition-colors duration-150",
         isSummer
-          ? "bg-red-50"
+          ? "bg-red-50 dark:bg-red-900/20"
           : isConsecutive
-            ? "bg-amber-50/50"
+            ? "bg-amber-50/50 dark:bg-amber-900/20"
             : hasRaces
-              ? "bg-white"
-              : "bg-slate-50",
+              ? "bg-white dark:bg-slate-800"
+              : "bg-slate-50 dark:bg-slate-800/50",
       )}
     >
       <div className="flex items-center px-4 py-3">
         <div className="w-20 shrink-0">
-          <span className="text-sm font-semibold text-slate-700">
+          <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">
             Turn {turn.turn}
           </span>
         </div>
 
         <div className="w-40 shrink-0">
-          <span className="text-sm text-slate-500">
+          <span className="text-sm text-slate-500 dark:text-slate-400">
             {getMonthName(turn.month)} ({turn.half === 1 ? "1st" : "2nd"})
           </span>
         </div>
@@ -67,7 +67,7 @@ function TurnRow({
                     "flex items-center gap-2 px-3 py-1.5 text-sm rounded-md border transition-all duration-150 cursor-pointer",
                     turnRace.race.id === selectedRaceId
                       ? "bg-blue-600 border-blue-600 text-white shadow-sm"
-                      : "border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-700",
+                      : "border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300",
                   )}
                 >
                   <span
@@ -76,10 +76,10 @@ function TurnRow({
                       turnRace.race.id === selectedRaceId
                         ? "text-white/80"
                         : turnRace.race.grade === 100
-                          ? "text-yellow-700"
+                          ? "text-yellow-700 dark:text-yellow-400"
                           : turnRace.race.grade === 200
-                            ? "text-slate-600"
-                            : "text-orange-700",
+                            ? "text-slate-600 dark:text-slate-400"
+                            : "text-orange-700 dark:text-orange-400",
                     )}
                   >
                     {getGradeLabel(turnRace.race.grade)}
@@ -89,7 +89,7 @@ function TurnRow({
                       "font-medium",
                       turnRace.race.id === selectedRaceId
                         ? "text-white"
-                        : "text-slate-800",
+                        : "text-slate-800 dark:text-slate-200",
                     )}
                   >
                     {turnRace.race.name_en}
@@ -99,7 +99,7 @@ function TurnRow({
                       "text-xs",
                       turnRace.race.id === selectedRaceId
                         ? "text-blue-200"
-                        : "text-slate-400",
+                        : "text-slate-400 dark:text-slate-500",
                     )}
                   >
                     {getTerrainLabel(turnRace.race.terrain)} ·{" "}
@@ -109,7 +109,7 @@ function TurnRow({
               ))}
             </div>
           ) : (
-            <div className="flex items-center gap-2 text-slate-400">
+            <div className="flex items-center gap-2 text-slate-400 dark:text-slate-500">
               <Ban className="w-4 h-4" />
               <span className="text-sm">No races available</span>
             </div>
@@ -118,7 +118,7 @@ function TurnRow({
 
         <div className="w-32 shrink-0 flex items-center justify-end gap-2">
           {isConsecutive && (
-            <span className="flex items-center gap-1 text-xs font-medium text-amber-600 bg-amber-100 px-2 py-1 rounded">
+            <span className="flex items-center gap-1 text-xs font-medium text-amber-600 dark:text-amber-400 bg-amber-100 dark:bg-amber-900/40 px-2 py-1 rounded">
               <AlertTriangle className="w-3 h-3" />
               Fatigue
             </span>
@@ -126,7 +126,7 @@ function TurnRow({
           {selectedRace && (
             <button
               onClick={() => clearTurn(turn.turn)}
-              className="flex items-center gap-1 text-xs text-red-600 hover:text-red-800 px-2 py-1 rounded hover:bg-red-50 transition-colors duration-150"
+              className="flex items-center gap-1 text-xs text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 px-2 py-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-150"
             >
               <X className="w-3 h-3" />
               Clear
@@ -166,9 +166,9 @@ export function TurnTimeline() {
       {years.map(({ year, turns: yearTurns }) => (
         <div
           key={year}
-          className="border border-slate-200 rounded-xl overflow-hidden bg-white shadow-sm"
+          className="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden bg-white dark:bg-slate-800 shadow-sm"
         >
-          <div className="bg-slate-100 px-4 py-3 font-semibold text-slate-800 border-b border-slate-200 flex items-center gap-4">
+          <div className="bg-slate-100 dark:bg-slate-700 px-4 py-3 font-semibold text-slate-800 dark:text-slate-200 border-b border-slate-200 dark:border-slate-600 flex items-center gap-4">
             <span className="w-20">Turn</span>
             <span className="w-40">Month</span>
             <span className="flex-1">Available Races</span>

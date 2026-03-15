@@ -13,10 +13,10 @@ interface EpithetItemProps {
   onClick?: () => void;
 }
 
-const rankColors: Record<1 | 2 | 3, { bg: string; text: string }> = {
-  1: { bg: "bg-amber-50", text: "text-amber-700" },
-  2: { bg: "bg-slate-50", text: "text-slate-600" },
-  3: { bg: "bg-yellow-50", text: "text-yellow-700" },
+const rankColors: Record<1 | 2 | 3, { bg: string; text: string; bgDark: string; textDark: string }> = {
+  1: { bg: "bg-amber-50", text: "text-amber-700", bgDark: "dark:bg-amber-900/40", textDark: "dark:text-amber-400" },
+  2: { bg: "bg-slate-50", text: "text-slate-600", bgDark: "dark:bg-slate-700", textDark: "dark:text-slate-300" },
+  3: { bg: "bg-yellow-50", text: "text-yellow-700", bgDark: "dark:bg-yellow-900/40", textDark: "dark:text-yellow-400" },
 };
 
 const rankLabels: Record<1 | 2 | 3, string> = {
@@ -59,12 +59,12 @@ export function EpithetItem({
         className={cn(
           "w-full flex items-center justify-between px-3 py-2.5 text-left rounded-lg border text-sm transition-all duration-150",
           complete && selected
-            ? "bg-gradient-to-r from-green-50 to-blue-50 border-green-300 border-l-4"
+            ? "bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/30 dark:to-blue-900/30 border-green-300 dark:border-green-700 border-l-4"
             : complete
-              ? "bg-green-50 border-green-200"
+              ? "bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-800"
               : selected
-                ? "bg-blue-50 border-blue-300 shadow-sm border-l-4"
-                : "border-slate-200 hover:border-slate-300 hover:bg-slate-50",
+                ? "bg-blue-50 dark:bg-blue-900/30 border-blue-300 dark:border-blue-700 shadow-sm border-l-4"
+                : "border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700",
           onClick && "cursor-pointer",
         )}
       >
@@ -74,24 +74,26 @@ export function EpithetItem({
               "px-2 py-0.5 rounded text-xs font-semibold shrink-0",
               colors.bg,
               colors.text,
+              colors.bgDark,
+              colors.textDark,
             )}
           >
             {rankLabels[rank]}
           </span>
-          <span className="font-medium text-slate-800 truncate">{name}</span>
+          <span className="font-medium text-slate-800 dark:text-slate-200 truncate">{name}</span>
         </div>
         <div className="flex items-center gap-2 shrink-0">
           {showProgress && (
-            <span className="text-xs text-slate-500 font-medium">
+            <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
               {progress}/{target}
             </span>
           )}
           {complete ? (
             <Check className="w-4 h-4 text-green-500" />
           ) : selected ? (
-            <div className="w-4 h-4 rounded-full border-2 border-blue-300" />
+            <div className="w-4 h-4 rounded-full border-2 border-blue-300 dark:border-blue-600" />
           ) : onClick ? (
-            <div className="w-4 h-4 rounded-full border-2 border-slate-200" />
+            <div className="w-4 h-4 rounded-full border-2 border-slate-200 dark:border-slate-600" />
           ) : null}
         </div>
       </Container>
