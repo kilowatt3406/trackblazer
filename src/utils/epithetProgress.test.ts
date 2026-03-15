@@ -1,15 +1,15 @@
-import { describe, it, expect } from 'vitest';
-import { calculateEpithetProgress } from '../utils/epithetProgress';
-import { Race } from '../types';
+import { describe, it, expect } from "vitest";
+import { getEpithet, type SelectedRace } from "../data/epithetRequirements";
+import { Race } from "../types";
 
 const createRace = (overrides: Partial<Race> = {}): Race => ({
   id: 100001,
   banner_id: 1001,
   race_id: 1001,
-  name_en: 'Test Race',
-  name_jp: 'テストレース',
-  name_ko: '테스트레이스',
-  name_tw: '測試賽馬',
+  name_en: "Test Race",
+  name_jp: "テストレース",
+  name_ko: "테스트레이스",
+  name_tw: "測試賽馬",
   grade: 100,
   terrain: 1,
   direction: 1,
@@ -21,9 +21,9 @@ const createRace = (overrides: Partial<Race> = {}): Race => ({
   track: 101,
   course: 1,
   course_id: 10101,
-  factor: { effect_1: 'test', effect_2: 'speed' },
+  factor: { effect_1: "test", effect_2: "speed" },
   list_ura: [],
-  url_name: 'test-race',
+  url_name: "test-race",
   ...overrides,
 });
 
@@ -33,285 +33,358 @@ const createSelectedRace = (uraId: string, race: Race, year: number = 2) => ({
   year,
 });
 
-describe('Epithet Progress Calculation', () => {
-  describe('named_races', () => {
-    it('should count progress when required race is selected', () => {
-      const selectedRaces = [
-        createSelectedRace('163', createRace({ id: 100501, name_en: 'Satsuki Sho' }), 2),
-      ];
-      
-      const progress = calculateEpithetProgress(selectedRaces);
-      const epithet = progress.find(p => p.epithet.name_en_gl === 'Stunning');
-      
-      expect(epithet).toBeDefined();
-      expect(epithet!.progress).toBe(1);
-      expect(epithet!.target).toBe(3);
-      expect(epithet!.met).toBe(false);
-    });
+const checkEpithet = (name: string, races: SelectedRace[]) => {
+  const epithet = getEpithet(name);
+  if (!epithet) return undefined;
 
-    it('should mark as met when all required races are selected', () => {
-      const selectedRaces = [
-        createSelectedRace('163', createRace({ id: 100501, name_en: 'Satsuki Sho' }), 2),
-        createSelectedRace('166', createRace({ id: 101001, name_en: 'Tokyo Yushun' }), 2),
-        createSelectedRace('168', createRace({ id: 101501, name_en: 'Kikuka Sho' }), 2),
-      ];
-      
-      const progress = calculateEpithetProgress(selectedRaces);
-      const epithet = progress.find(p => p.epithet.name_en_gl === 'Stunning');
-      
-      expect(epithet).toBeDefined();
-      expect(epithet!.progress).toBe(3);
-      expect(epithet!.target).toBe(3);
-      expect(epithet!.met).toBe(true);
-    });
+  expect(epithet.check).toBeTypeOf("function");
+  const result = epithet.check(races);
+  expect(result).toBeTypeOf("object");
 
-    it('should handle multiple URA IDs for same race', () => {
-      const selectedRaces = [
-        createSelectedRace('76', createRace({ id: 101601, name_en: 'Tenno Sho (Autumn)' }), 2),
-      ];
-      
-      const progress = calculateEpithetProgress(selectedRaces);
-      const epithet = progress.find(p => p.epithet.name_en_gl === 'Shield Bearer');
-      
-      expect(epithet).toBeDefined();
-      expect(epithet!.progress).toBe(1);
-      // Each named_races requirement contributes 1 if met
-      expect(epithet!.target).toBe(2);
-    });
-  });
+  const met = (result.progress || 0) >= (result.target || 1);
+  return { ...result, epithet, met };
+};
 
-  describe('race_count', () => {
-    it('should count races by terrain', () => {
+describe("Epithet Progress Calculation", () => {
+  describe("Heroine", () => {
+    it("should not trigger on QEII senior", () => {
       const selectedRaces = [
-        createSelectedRace('1', createRace({ id: 100001, terrain: 2, grade: 100 }), 2),
-        createSelectedRace('2', createRace({ id: 100002, terrain: 2, grade: 100 }), 2),
-        createSelectedRace('3', createRace({ id: 100003, terrain: 2, grade: 100 }), 2),
+        createSelectedRace("162", createRace({})),
+        createSelectedRace("165", createRace({})),
+        createSelectedRace("167", createRace({})),
+        createSelectedRace("77_2", createRace({})),
       ];
-      
-      const progress = calculateEpithetProgress(selectedRaces);
-      const epithet = progress.find(p => p.epithet.name_en_gl === 'Dirty Work');
-      
-      expect(epithet).toBeDefined();
-      expect(epithet!.progress).toBe(3);
-      expect(epithet!.target).toBe(5);
-      expect(epithet!.met).toBe(false);
-    });
 
-    it('should count races by grade', () => {
-      const selectedRaces = [
-        createSelectedRace('1', createRace({ id: 100001, grade: 400 }), 2),
-        createSelectedRace('2', createRace({ id: 100002, grade: 400 }), 2),
-      ];
-      
-      const progress = calculateEpithetProgress(selectedRaces);
-      const epithet = progress.find(p => p.epithet.name_en_gl === 'Pro Racer');
-      
-      expect(epithet).toBeDefined();
-      expect(epithet!.progress).toBe(2);
-      expect(epithet!.target).toBe(10);
-    });
+      const epithet = checkEpithet("Heroine", selectedRaces);
 
-    it('should count races by distance range', () => {
-      const selectedRaces = [
-        createSelectedRace('1', createRace({ distance: 2100 }), 2),
-        createSelectedRace('2', createRace({ distance: 2200 }), 2),
-      ];
-      
-      const progress = calculateEpithetProgress(selectedRaces);
-      const epithet = progress.find(p => p.epithet.name_en_gl === 'Standard Distance Leader');
-      
-      expect(epithet).toBeDefined();
-      expect(epithet!.progress).toBe(2);
-      expect(epithet!.target).toBe(10);
-    });
-  });
-
-  describe('g1_count', () => {
-    it('should count G1 dirt races', () => {
-      const selectedRaces = [
-        createSelectedRace('1', createRace({ grade: 100, terrain: 2 }), 2),
-        createSelectedRace('2', createRace({ grade: 100, terrain: 2 }), 2),
-        createSelectedRace('3', createRace({ grade: 100, terrain: 2 }), 2),
-      ];
-      
-      const progress = calculateEpithetProgress(selectedRaces);
-      const epithet = progress.find(p => p.epithet.name_en_gl === 'Dirt G1 Achiever');
-      
-      expect(epithet).toBeDefined();
-      expect(epithet!.progress).toBe(3);
-      expect(epithet!.target).toBe(3);
-      expect(epithet!.met).toBe(true);
-    });
-
-    it('should not count turf G1 races for dirt epithet', () => {
-      const selectedRaces = [
-        createSelectedRace('1', createRace({ grade: 100, terrain: 1 }), 2),
-      ];
-      
-      const progress = calculateEpithetProgress(selectedRaces);
-      const epithet = progress.find(p => p.epithet.name_en_gl === 'Dirt G1 Achiever');
-      
-      expect(epithet).toBeDefined();
-      expect(epithet!.progress).toBe(0);
-    });
-  });
-
-  describe('terrain_distances', () => {
-    it('should track terrain and distance combinations', () => {
-      const selectedRaces = [
-        createSelectedRace('1', createRace({ terrain: 1, distance: 1200 }), 2), // turf short
-        createSelectedRace('2', createRace({ terrain: 1, distance: 1600 }), 2), // turf mile
-        createSelectedRace('3', createRace({ terrain: 1, distance: 2200 }), 2), // turf medium
-      ];
-      
-      const progress = calculateEpithetProgress(selectedRaces);
-      const epithet = progress.find(p => p.epithet.name_en_gl === 'Turf Tussler');
-      
-      expect(epithet).toBeDefined();
-      expect(epithet!.progress).toBe(3);
-      expect(epithet!.target).toBe(4);
-      expect(epithet!.met).toBe(false);
-    });
-
-    it('should require all terrain/distance categories', () => {
-      const selectedRaces = [
-        createSelectedRace('1', createRace({ terrain: 2, distance: 1200 }), 2), // dirt short
-        createSelectedRace('2', createRace({ terrain: 2, distance: 1600 }), 2), // dirt mile
-        createSelectedRace('3', createRace({ terrain: 2, distance: 2000 }), 2), // dirt medium
-      ];
-      
-      const progress = calculateEpithetProgress(selectedRaces);
-      const epithet = progress.find(p => p.epithet.name_en_gl === 'Dirt Dancer');
-      
-      expect(epithet).toBeDefined();
-      expect(epithet!.progress).toBe(3);
-      expect(epithet!.target).toBe(3);
-      expect(epithet!.met).toBe(true);
-    });
-  });
-
-  describe('track', () => {
-    it('should count races at specific tracks', () => {
-      const selectedRaces = [
-        createSelectedRace('1', createRace({ track: 102 }), 2), // Sapporo
-        createSelectedRace('2', createRace({ track: 103 }), 2), // Hakodate
-      ];
-      
-      const progress = calculateEpithetProgress(selectedRaces);
-      const epithet = progress.find(p => p.epithet.name_en_gl === 'Hokkaido Hotshot');
-      
-      expect(epithet).toBeDefined();
-      expect(epithet!.progress).toBe(2);
-      expect(epithet!.target).toBe(3);
-    });
-  });
-
-  describe('consecutive', () => {
-    it('should detect consecutive wins', () => {
-      const selectedRaces = [
-        createSelectedRace('1025', createRace({ id: 110401, name_en: 'JBC Sprint' }), 2),
-        createSelectedRace('1025_2', createRace({ id: 110401, name_en: 'JBC Sprint' }), 3),
-      ];
-      
-      const progress = calculateEpithetProgress(selectedRaces);
-      const epithet = progress.find(p => p.epithet.name_en_gl === 'Dirt Sprinter');
-      
-      expect(epithet).toBeDefined();
-      expect(epithet!.progress).toBe(2);
-      expect(epithet!.target).toBe(2);
-      expect(epithet!.met).toBe(true);
-    });
-
-    it('should not count non-consecutive wins', () => {
-      const selectedRaces = [
-        createSelectedRace('1025_2', createRace({ id: 110401, name_en: 'JBC Sprint' }), 3),
-      ];
-      
-      const progress = calculateEpithetProgress(selectedRaces);
-      const epithet = progress.find(p => p.epithet.name_en_gl === 'Dirt Sprinter');
-      
-      expect(epithet).toBeDefined();
-      expect(epithet!.progress).toBe(1);
-    });
-  });
-
-  describe('epithet_dep', () => {
-    it('should depend on other epithets being met', () => {
-      const selectedRaces = [
-        createSelectedRace('163', createRace({ id: 100501 }), 2),
-        createSelectedRace('166', createRace({ id: 101001 }), 2),
-        createSelectedRace('168', createRace({ id: 101501 }), 2),
-      ];
-      
-      const progress = calculateEpithetProgress(selectedRaces);
-      const stunning = progress.find(p => p.epithet.name_en_gl === 'Stunning');
-      const legendary = progress.find(p => p.epithet.name_en_gl === 'Legendary');
-      
-      expect(stunning!.met).toBe(true);
-      expect(legendary!.met).toBe(false);
-    });
-
-    it('should infer epithets from progress', () => {
-      const selectedRaces = [
-        createSelectedRace('3', createRace({ id: 100301 }), 3),
-        createSelectedRace('4', createRace({ id: 100601 }), 3),
-        createSelectedRace('74_2', createRace({ id: 101201 }), 3),
-      ];
-      
-      const progress = calculateEpithetProgress(selectedRaces);
-      const springChampion = progress.find(p => p.epithet.name_en_gl === 'Spring Champion');
-      
-      expect(springChampion!.met).toBe(true);
-    });
-  });
-
-  describe('year_race', () => {
-    it('should require race in specific year', () => {
-      // Lady epithet (id 200): Oka Sho + Japanese Oaks + Shuka Sho
-      // Heroine: Lady epithet + QEII Cup in Year 2
-      const selectedRaces = [
-        createSelectedRace('162', createRace({ id: 100401 }), 2),
-        createSelectedRace('165', createRace({ id: 100901 }), 2),
-        createSelectedRace('167', createRace({ id: 101401 }), 2),
-        createSelectedRace('77', createRace({ id: 101701 }), 2),
-      ];
-      
-      const progress = calculateEpithetProgress(selectedRaces);
-      const epithet = progress.find(p => p.epithet.name_en_gl === 'Heroine');
-      
-      expect(epithet).toBeDefined();
-      expect(epithet!.met).toBe(true);
-    });
-
-    it('should not count race in wrong year', () => {
-      const selectedRaces = [
-        createSelectedRace('77_2', createRace({ id: 101701 }), 3),
-      ];
-      
-      const progress = calculateEpithetProgress(selectedRaces);
-      const epithet = progress.find(p => p.epithet.name_en_gl === 'Heroine');
-      
       expect(epithet).toBeDefined();
       expect(epithet!.met).toBe(false);
     });
+
+    it("should not trigger on missing lady", () => {
+      const selectedRaces = [
+        createSelectedRace("162", createRace({})),
+        createSelectedRace("165", createRace({})),
+        createSelectedRace("77", createRace({})),
+      ];
+
+      const epithet = checkEpithet("Heroine", selectedRaces);
+
+      expect(epithet).toBeDefined();
+      expect(epithet!.met).toBe(false);
+    });
+
+    it("should trigger when complete", () => {
+      const selectedRaces = [
+        createSelectedRace("162", createRace({})),
+        createSelectedRace("165", createRace({})),
+        createSelectedRace("167", createRace({})),
+        createSelectedRace("77", createRace({})),
+      ];
+
+      const epithet = checkEpithet("Heroine", selectedRaces);
+
+      expect(epithet).toBeDefined();
+      expect(epithet!.met).toBe(true);
+    });
   });
 
-  describe('integration', () => {
-    it('should calculate multiple epithets correctly', () => {
+  describe("Goddess", () => {
+    it("should not trigger on missing one QEII", () => {
       const selectedRaces = [
-        createSelectedRace('162', createRace({ id: 100401, grade: 100, terrain: 1, distance: 1600 }), 2),
-        createSelectedRace('163', createRace({ id: 100501, grade: 100, terrain: 1, distance: 2000 }), 2),
-        createSelectedRace('165', createRace({ id: 100901, grade: 100, terrain: 1, distance: 2400 }), 2),
-        createSelectedRace('167', createRace({ id: 101401, grade: 100, terrain: 1, distance: 2000 }), 2),
+        createSelectedRace("162", createRace({})),
+        createSelectedRace("165", createRace({})),
+        createSelectedRace("167", createRace({})),
+        createSelectedRace("5", createRace({})),
+        createSelectedRace("623", createRace({})),
+        createSelectedRace("77_2", createRace({})),
       ];
-      
-      const progress = calculateEpithetProgress(selectedRaces);
-      
-      const heroine = progress.find(p => p.epithet.name_en_gl === 'Lady');
-      expect(heroine!.met).toBe(true);
-      
-      const dirtAdept = progress.find(p => p.epithet.name_en_gl === 'Dirty Work');
-      expect(dirtAdept!.progress).toBe(0);
+
+      const epithet = checkEpithet("Goddess", selectedRaces);
+
+      expect(epithet).toBeDefined();
+      expect(epithet!.met).toBe(false);
+    });
+
+    it("should not trigger on missing lady", () => {
+      const selectedRaces = [
+        createSelectedRace("162", createRace({})),
+        createSelectedRace("165", createRace({})),
+        createSelectedRace("5", createRace({})),
+        createSelectedRace("623", createRace({})),
+        createSelectedRace("77", createRace({})),
+        createSelectedRace("77_2", createRace({})),
+      ];
+
+      const epithet = checkEpithet("Goddess", selectedRaces);
+
+      expect(epithet).toBeDefined();
+      expect(epithet!.met).toBe(false);
+    });
+
+    it("should trigger when complete", () => {
+      const selectedRaces = [
+        createSelectedRace("162", createRace({})),
+        createSelectedRace("165", createRace({})),
+        createSelectedRace("167", createRace({})),
+        createSelectedRace("5", createRace({})),
+        createSelectedRace("623", createRace({})),
+        createSelectedRace("77", createRace({})),
+        createSelectedRace("77_2", createRace({})),
+      ];
+
+      const epithet = checkEpithet("Goddess", selectedRaces);
+
+      expect(epithet).toBeDefined();
+      expect(epithet!.met).toBe(true);
+    });
+  });
+
+  describe("Mile a Minute", () => {
+    it("should not trigger when incomplete", () => {
+      const selectedRaces = [
+        createSelectedRace("164", createRace({})),
+        createSelectedRace("162", createRace({})),
+        createSelectedRace("5", createRace({})),
+      ];
+
+      const epithet = checkEpithet("Mile a Minute", selectedRaces);
+
+      expect(epithet).toBeDefined();
+      expect(epithet!.met).toBe(false);
+    });
+
+    it("should trigger on hanshin jf", () => {
+      const selectedRaces = [
+        createSelectedRace("164", createRace({})),
+        createSelectedRace("162", createRace({})),
+        createSelectedRace("73_2", createRace({})),
+        createSelectedRace("5", createRace({})),
+        createSelectedRace("78", createRace({})),
+        createSelectedRace("623", createRace({})),
+      ];
+
+      const epithet = checkEpithet("Mile a Minute", selectedRaces);
+
+      expect(epithet).toBeDefined();
+      expect(epithet!.met).toBe(true);
+    });
+
+    it("should trigger on asahi hai", () => {
+      const selectedRaces = [
+        createSelectedRace("164", createRace({})),
+        createSelectedRace("162", createRace({})),
+        createSelectedRace("73", createRace({})),
+        createSelectedRace("5", createRace({})),
+        createSelectedRace("78_2", createRace({})),
+        createSelectedRace("624", createRace({})),
+      ];
+
+      const epithet = checkEpithet("Mile a Minute", selectedRaces);
+
+      expect(epithet).toBeDefined();
+      expect(epithet!.met).toBe(true);
+    });
+  });
+
+  describe("Dirt G1 Star", () => {
+    it("should not trigger on turf races", () => {
+      const selectedRaces = [
+        createSelectedRace("1", createRace({ grade: 100, terrain: 1 })),
+        createSelectedRace("2", createRace({ grade: 100, terrain: 2 })),
+        createSelectedRace("3", createRace({ grade: 100, terrain: 2 })),
+        createSelectedRace("4", createRace({ grade: 100, terrain: 2 })),
+      ];
+
+      const epithet = checkEpithet("Dirt G1 Star", selectedRaces);
+
+      expect(epithet).toBeDefined();
+      expect(epithet!.met).toBe(false);
+    });
+
+    it("should not trigger on too few races", () => {
+      const selectedRaces = [
+        createSelectedRace("1", createRace({ grade: 100, terrain: 2 })),
+        createSelectedRace("2", createRace({ grade: 100, terrain: 2 })),
+        createSelectedRace("3", createRace({ grade: 100, terrain: 2 })),
+      ];
+
+      const epithet = checkEpithet("Dirt G1 Star", selectedRaces);
+
+      expect(epithet).toBeDefined();
+      expect(epithet!.met).toBe(false);
+    });
+
+    it("should not trigger on too low grade", () => {
+      const selectedRaces = [
+        createSelectedRace("1", createRace({ grade: 200, terrain: 2 })),
+        createSelectedRace("2", createRace({ grade: 100, terrain: 2 })),
+        createSelectedRace("3", createRace({ grade: 100, terrain: 2 })),
+        createSelectedRace("4", createRace({ grade: 100, terrain: 2 })),
+      ];
+
+      const epithet = checkEpithet("Dirt G1 Star", selectedRaces);
+
+      expect(epithet).toBeDefined();
+      expect(epithet!.met).toBe(false);
+    });
+
+    it("should trigger when complete", () => {
+      const selectedRaces = [
+        createSelectedRace("1", createRace({ grade: 100, terrain: 2 })),
+        createSelectedRace("2", createRace({ grade: 100, terrain: 2 })),
+        createSelectedRace("3", createRace({ grade: 100, terrain: 2 })),
+        createSelectedRace("4", createRace({ grade: 100, terrain: 2 })),
+      ];
+
+      const epithet = checkEpithet("Dirt G1 Star", selectedRaces);
+
+      expect(epithet).toBeDefined();
+      expect(epithet!.met).toBe(true);
+    });
+  });
+
+  describe("Standard Distance Leader", () => {
+    it("should not trigger on invalid race", () => {
+      const selectedRaces = [
+        createSelectedRace("1", createRace({ distance: 2200 })),
+        createSelectedRace("2", createRace({ distance: 1200 })),
+        createSelectedRace("3", createRace({ distance: 2400 })),
+        createSelectedRace("4", createRace({ distance: 3200 })),
+        createSelectedRace("5", createRace({ distance: 2000 })),
+        createSelectedRace("6", createRace({ distance: 1600 })),
+        createSelectedRace("7", createRace({ distance: 2000 })),
+        createSelectedRace("8", createRace({ distance: 2000 })),
+        createSelectedRace("9", createRace({ distance: 2000 })),
+        createSelectedRace("10", createRace({ distance: 2000 })),
+      ];
+
+      const epithet = checkEpithet("Standard Distance Leader", selectedRaces);
+
+      expect(epithet).toBeDefined();
+      expect(epithet!.met).toBe(false);
+    });
+
+    it("should trigger when complete", () => {
+      const selectedRaces = [
+        createSelectedRace("1", createRace({ distance: 2000 })),
+        createSelectedRace("2", createRace({ distance: 1200 })),
+        createSelectedRace("3", createRace({ distance: 2400 })),
+        createSelectedRace("4", createRace({ distance: 3200 })),
+        createSelectedRace("5", createRace({ distance: 2000 })),
+        createSelectedRace("6", createRace({ distance: 1600 })),
+        createSelectedRace("7", createRace({ distance: 2000 })),
+        createSelectedRace("8", createRace({ distance: 2000 })),
+        createSelectedRace("9", createRace({ distance: 2000 })),
+        createSelectedRace("10", createRace({ distance: 2000 })),
+      ];
+
+      const epithet = checkEpithet("Standard Distance Leader", selectedRaces);
+
+      expect(epithet).toBeDefined();
+      expect(epithet!.met).toBe(true);
+    });
+  });
+
+  describe("Turf Tussler", () => {
+    it("should not trigger when missing a race", () => {
+      const selectedRaces = [
+        createSelectedRace("1", createRace({ distance: 1200 })),
+        createSelectedRace("2", createRace({ distance: 1800 })),
+        createSelectedRace("3", createRace({ distance: 3000 })),
+      ];
+
+      const epithet = checkEpithet("Turf Tussler", selectedRaces);
+
+      expect(epithet).toBeDefined();
+      expect(epithet!.met).toBe(false);
+    });
+
+    it("should trigger when complete", () => {
+      const selectedRaces = [
+        createSelectedRace("1", createRace({ distance: 1200 })),
+        createSelectedRace("2", createRace({ distance: 1800 })),
+        createSelectedRace("3", createRace({ distance: 2200 })),
+        createSelectedRace("4", createRace({ distance: 3000 })),
+      ];
+
+      const epithet = checkEpithet("Turf Tussler", selectedRaces);
+
+      expect(epithet).toBeDefined();
+      expect(epithet!.met).toBe(true);
+    });
+  });
+
+  describe("Phenomenal", () => {
+    it("should not trigger on duplicate race", () => {
+      const selectedRaces = [
+        createSelectedRace("163", createRace({})),
+        createSelectedRace("166", createRace({})),
+        createSelectedRace("168", createRace({})),
+        createSelectedRace("74", createRace({})),
+        createSelectedRace("74_2", createRace({})),
+      ];
+
+      const epithet = checkEpithet("Phenomenal", selectedRaces);
+
+      expect(epithet).toBeDefined();
+      expect(epithet!.met).toBe(false);
+    });
+
+    it("should trigger when complete", () => {
+      const selectedRaces = [
+        createSelectedRace("163", createRace({})),
+        createSelectedRace("166", createRace({})),
+        createSelectedRace("168", createRace({})),
+        createSelectedRace("74", createRace({})),
+        createSelectedRace("3", createRace({})),
+      ];
+
+      const epithet = checkEpithet("Phenomenal", selectedRaces);
+
+      expect(epithet).toBeDefined();
+      expect(epithet!.met).toBe(true);
+    });
+  });
+
+  describe("Kanto Conqueror", () => {
+    it("should not trigger on non-kanto races", () => {
+      const selectedRaces = [
+        createSelectedRace("1", createRace({ banner_id: 1, track: 10005 })),
+        createSelectedRace("2", createRace({ banner_id: 2, track: 10006 })),
+        createSelectedRace("3", createRace({ banner_id: 3, track: 10000 })),
+      ];
+
+      const epithet = checkEpithet("Kanto Conqueror", selectedRaces);
+
+      expect(epithet).toBeDefined();
+      expect(epithet!.met).toBe(false);
+    });
+
+    it("should not trigger on duplicate races", () => {
+      const selectedRaces = [
+        createSelectedRace("1", createRace({ banner_id: 1, track: 10005 })),
+        createSelectedRace("2", createRace({ banner_id: 2, track: 10006 })),
+        createSelectedRace("3", createRace({ banner_id: 1, track: 10005 })),
+      ];
+
+      const epithet = checkEpithet("Kanto Conqueror", selectedRaces);
+
+      expect(epithet).toBeDefined();
+      expect(epithet!.met).toBe(false);
+    });
+
+    it("should trigger when complete", () => {
+      const selectedRaces = [
+        createSelectedRace("1", createRace({ banner_id: 1, track: 10005 })),
+        createSelectedRace("2", createRace({ banner_id: 2, track: 10006 })),
+        createSelectedRace("3", createRace({ banner_id: 3, track: 10101 })),
+      ];
+
+      const epithet = checkEpithet("Kanto Conqueror", selectedRaces);
+
+      expect(epithet).toBeDefined();
+      expect(epithet!.met).toBe(true);
     });
   });
 });

@@ -11,7 +11,10 @@
       {
         devShells.default = pkgs.mkShellNoCC {
           packages = [
-            (agents.lib.makeJailedOpencode { })
+            # (agents.lib.makeJailedOpencode { })
+            pkgs.nodejs
+            pkgs.typescript-language-server
+            pkgs.prettier
           ];
         };
       }
