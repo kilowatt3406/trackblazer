@@ -16,7 +16,7 @@ interface PlannerState {
   selectAllEpithets: () => void;
   clearEpithets: () => void;
   
-  getSelectedRaces: () => { turn: number; race: Race }[];
+  getSelectedRaces: () => { turn: number; race: Race; uraId: string; year: number }[];
   getConsecutiveRaceTurns: () => number[];
   getStats: () => Record<StatType, number>;
   
@@ -98,13 +98,13 @@ export const usePlannerStore = create<PlannerState>((set, get) => ({
 
   getSelectedRaces: () => {
     const state = get();
-    const result: { turn: number; race: Race }[] = [];
+    const result: { turn: number; race: Race; uraId: string; year: number }[] = [];
     
     for (const turn of state.turns) {
       for (const raceId of turn.selectedRaceIds) {
-        const race = turn.availableRaces.find(r => r.id === raceId);
-        if (race) {
-          result.push({ turn: turn.turn, race });
+        const turnRace = turn.availableRaces.find(tr => tr.race.id === raceId);
+        if (turnRace) {
+          result.push({ turn: turn.turn, race: turnRace.race, uraId: turnRace.uraId, year: turnRace.year });
         }
       }
     }

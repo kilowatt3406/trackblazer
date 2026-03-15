@@ -35,12 +35,12 @@ export function Optimizer() {
       
       if (desc.includes('g1')) {
         for (const turn of turns) {
-          const g1Races = turn.availableRaces.filter(r => r.grade === 100);
+          const g1Races = turn.availableRaces.filter(tr => tr.race.grade === 100);
           if (g1Races.length > 0) {
             const alreadySelected = newSelections.some(s => s.turn === turn.turn);
             if (!alreadySelected) {
               bestTurn = turn.turn;
-              bestRaceId = g1Races[0].id;
+              bestRaceId = g1Races[0].race.id;
               break;
             }
           }
@@ -48,12 +48,12 @@ export function Optimizer() {
       }
       else if (desc.includes('g2')) {
         for (const turn of turns) {
-          const g2Races = turn.availableRaces.filter(r => r.grade === 200);
+          const g2Races = turn.availableRaces.filter(tr => tr.race.grade === 200);
           if (g2Races.length > 0) {
             const alreadySelected = newSelections.some(s => s.turn === turn.turn);
             if (!alreadySelected) {
               bestTurn = turn.turn;
-              bestRaceId = g2Races[0].id;
+              bestRaceId = g2Races[0].race.id;
               break;
             }
           }
@@ -61,12 +61,12 @@ export function Optimizer() {
       }
       else if (desc.includes('g3')) {
         for (const turn of turns) {
-          const g3Races = turn.availableRaces.filter(r => r.grade === 300);
+          const g3Races = turn.availableRaces.filter(tr => tr.race.grade === 300);
           if (g3Races.length > 0) {
             const alreadySelected = newSelections.some(s => s.turn === turn.turn);
             if (!alreadySelected) {
               bestTurn = turn.turn;
-              bestRaceId = g3Races[0].id;
+              bestRaceId = g3Races[0].race.id;
               break;
             }
           }
@@ -74,12 +74,12 @@ export function Optimizer() {
       }
       else if (desc.includes('dirt')) {
         for (const turn of turns) {
-          const dirtRaces = turn.availableRaces.filter(r => r.terrain === 1);
+          const dirtRaces = turn.availableRaces.filter(tr => tr.race.terrain === 2);
           if (dirtRaces.length > 0) {
             const alreadySelected = newSelections.some(s => s.turn === turn.turn);
             if (!alreadySelected) {
               bestTurn = turn.turn;
-              bestRaceId = dirtRaces[0].id;
+              bestRaceId = dirtRaces[0].race.id;
               break;
             }
           }
@@ -91,7 +91,7 @@ export function Optimizer() {
             const alreadySelected = newSelections.some(s => s.turn === turn.turn);
             if (!alreadySelected) {
               bestTurn = turn.turn;
-              bestRaceId = turn.availableRaces[0].id;
+              bestRaceId = turn.availableRaces[0].race.id;
               break;
             }
           }

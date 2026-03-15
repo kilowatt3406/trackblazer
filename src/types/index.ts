@@ -28,11 +28,9 @@ export interface Race {
 export type StatType = 'speed' | 'stamina' | 'power' | 'guts' | 'wisdom';
 
 export interface TurnRace {
-  year: 1 | 2 | 3;
-  month: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
-  half: 1 | 2;
-  turn: number;
   race: Race;
+  uraId: string;
+  year: number;
 }
 
 export interface Turn {
@@ -40,7 +38,7 @@ export interface Turn {
   month: number;
   half: number;
   turn: number;
-  availableRaces: Race[];
+  availableRaces: TurnRace[];
   selectedRaceIds: number[];
 }
 

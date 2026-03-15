@@ -8,7 +8,7 @@ function TurnRow({ turn, consecutiveTurns }: { turn: Turn; consecutiveTurns: boo
   
   const hasRaces = turn.availableRaces.length > 0;
   const selectedRaceId = turn.selectedRaceIds[0];
-  const selectedRace = selectedRaceId ? turn.availableRaces.find(r => r.id === selectedRaceId) : null;
+  const selectedRace = selectedRaceId ? turn.availableRaces.find(tr => tr.race.id === selectedRaceId) : null;
   const isConsecutive = consecutiveTurns;
 
   const handleRaceSelect = (raceId: number) => {
@@ -40,32 +40,32 @@ function TurnRow({ turn, consecutiveTurns }: { turn: Turn; consecutiveTurns: boo
         <div className="flex-1 min-w-0">
           {hasRaces ? (
             <div className="flex flex-wrap gap-2">
-              {turn.availableRaces.map(race => (
+              {turn.availableRaces.map(turnRace => (
                 <button
-                  key={race.id}
-                  onClick={() => handleRaceSelect(race.id)}
+                  key={turnRace.race.id}
+                  onClick={() => handleRaceSelect(turnRace.race.id)}
                   className={cn(
                     "flex items-center gap-2 px-3 py-1.5 text-sm rounded-md border transition-all duration-150 cursor-pointer",
-                    race.id === selectedRaceId
+                    turnRace.race.id === selectedRaceId
                       ? "bg-blue-600 border-blue-600 text-white shadow-sm"
                       : "border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-700"
                   )}
                 >
                   <span className={cn(
                     "font-semibold text-xs",
-                    race.id === selectedRaceId 
+                    turnRace.race.id === selectedRaceId 
                       ? "text-white/80" 
-                      : race.grade === 100 ? "text-yellow-700" :
-                      race.grade === 200 ? "text-slate-600" :
+                      : turnRace.race.grade === 100 ? "text-yellow-700" :
+                      turnRace.race.grade === 200 ? "text-slate-600" :
                       "text-orange-700"
                   )}>
-                    {getGradeLabel(race.grade)}
+                    {getGradeLabel(turnRace.race.grade)}
                   </span>
-                  <span className={cn("font-medium", race.id === selectedRaceId ? "text-white" : "text-slate-800")}>
-                    {race.name_en}
+                  <span className={cn("font-medium", turnRace.race.id === selectedRaceId ? "text-white" : "text-slate-800")}>
+                    {turnRace.race.name_en}
                   </span>
-                  <span className={cn("text-xs", race.id === selectedRaceId ? "text-blue-200" : "text-slate-400")}>
-                    {getTerrainLabel(race.terrain)} · {race.distance}m
+                  <span className={cn("text-xs", turnRace.race.id === selectedRaceId ? "text-blue-200" : "text-slate-400")}>
+                    {getTerrainLabel(turnRace.race.terrain)} · {turnRace.race.distance}m
                   </span>
                 </button>
               ))}

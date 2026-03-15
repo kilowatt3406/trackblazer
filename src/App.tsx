@@ -1,6 +1,6 @@
 import { TurnTimeline } from './components/TurnTimeline';
 import { EpithetTracker } from './components/EpithetTracker';
-import { StatsDashboard } from './components/StatsDashboard';
+import { RewardsBox } from './components/RewardsBox';
 import { Optimizer } from './components/Optimizer';
 import { SaveLoad } from './components/SaveLoad';
 import { usePlannerStore } from './store/planner';
@@ -121,7 +121,7 @@ function App() {
           {viewMode === 'full' && (
             <div className="w-full lg:w-80 shrink-0 space-y-4">
               <div className="bg-white rounded-lg border border-slate-200 p-5">
-                <StatsDashboard />
+                <RewardsBox />
               </div>
               
               <div className="bg-white rounded-lg border border-slate-200 p-5">

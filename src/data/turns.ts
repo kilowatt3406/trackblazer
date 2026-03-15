@@ -24,19 +24,34 @@ function getYearMonthHalfFromTurn(turn: number): { year: 1 | 2 | 3; month: numbe
   return { year, month, half };
 }
 
+export interface TurnRace {
+  race: Race;
+  uraId: string;
+  year: number;
+}
+
 const turns: Turn[] = [];
 
 for (let turn = 1; turn <= 72; turn++) {
   const { year, month, half } = getYearMonthHalfFromTurn(turn);
   
-  const availableRaceIds = uraRaces
+  const availableURARaces = uraRaces
     .filter(ur => ur.year === year && ur.month === month && ur.half === half)
-    .map(ur => ur.instance)
-    .filter(id => raceMap.has(id));
+    .filter(ur => raceMap.has(ur.instance));
   
-  const availableRaces = availableRaceIds
-    .map(id => raceMap.get(id)!)
-    .filter(Boolean);
+  const availableRaces: TurnRace[] = availableURARaces
+    .map(ur => ({
+      race: raceMap.get(ur.instance)!,
+      uraId: ur.id,
+      year: ur.year,
+    }))
+    .sort((a, b) => {
+      // Sort by grade ascending (G1=100, G2=200, G3=300), then alphabetically
+      if (a.race.grade !== b.race.grade) {
+        return a.race.grade - b.race.grade;
+      }
+      return a.race.name_en.localeCompare(b.race.name_en);
+    });
 
   turns.push({
     year,
