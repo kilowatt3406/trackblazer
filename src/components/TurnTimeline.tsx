@@ -18,6 +18,9 @@ function TurnRow({
     ? turn.availableRaces.find((tr) => tr.race.id === selectedRaceId)
     : null;
   const isConsecutive = consecutiveTurns;
+  const isSummer =
+    (turn.year === 2 || turn.year === 3) &&
+    (turn.month === 7 || turn.month === 8);
 
   const handleRaceSelect = (raceId: number) => {
     if (selectedRaceId === raceId) {
@@ -31,11 +34,13 @@ function TurnRow({
     <div
       className={cn(
         "border-b border-slate-100 last:border-b-0 transition-colors duration-150",
-        isConsecutive
-          ? "bg-amber-50/50"
-          : hasRaces
-            ? "bg-white"
-            : "bg-slate-50",
+        isSummer
+          ? "bg-red-50"
+          : isConsecutive
+            ? "bg-amber-50/50"
+            : hasRaces
+              ? "bg-white"
+              : "bg-slate-50",
       )}
     >
       <div className="flex items-center px-4 py-3">
