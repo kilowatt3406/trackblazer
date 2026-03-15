@@ -6,11 +6,14 @@ interface PlannerState {
   turns: Turn[];
   selectedEpithetIds: number[];
   currentPlan: Plan | null;
+  visibleGrades: number[];
 
   toggleRace: (turn: number, raceId: number) => void;
   selectRace: (turn: number, raceId: number) => void;
   clearTurn: (turn: number) => void;
   clearAllRaces: () => void;
+
+  toggleGrade: (grade: number) => void;
 
   toggleEpithet: (epithetId: number) => void;
   selectAllEpithets: () => void;
@@ -24,6 +27,7 @@ interface PlannerState {
   }[];
   getConsecutiveRaceTurns: () => number[];
   getStats: () => Record<StatType, number>;
+  getVisibleGrades: () => number[];
 
   savePlan: (name: string) => Plan;
   loadPlan: (plan: Plan) => void;
@@ -35,6 +39,18 @@ export const usePlannerStore = create<PlannerState>((set, get) => ({
   turns: JSON.parse(JSON.stringify(initialTurns)),
   selectedEpithetIds: [],
   currentPlan: null,
+  visibleGrades: [100, 200, 300],
+
+  toggleGrade: (grade: number) => {
+    set((state) => {
+      const grades = state.visibleGrades;
+      if (grades.includes(grade)) {
+        return { visibleGrades: grades.filter((g) => g !== grade) };
+      } else {
+        return { visibleGrades: [...grades, grade].sort((a, b) => b - a) };
+      }
+    });
+  },
 
   toggleRace: (turn: number, raceId: number) => {
     set((state) => {
@@ -176,6 +192,10 @@ export const usePlannerStore = create<PlannerState>((set, get) => ({
     };
 
     return stats;
+  },
+
+  getVisibleGrades: () => {
+    return get().visibleGrades;
   },
 
   savePlan: (name: string) => {

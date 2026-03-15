@@ -139,11 +139,21 @@ function TurnRow({
 }
 
 export function TurnTimeline() {
-  const { turns, getConsecutiveRaceTurns } = usePlannerStore();
+  const { turns, getConsecutiveRaceTurns, getVisibleGrades } = usePlannerStore();
   const consecutiveTurns = getConsecutiveRaceTurns();
   const consecutiveSet = new Set(consecutiveTurns);
+  const visibleGrades = getVisibleGrades();
 
-  const visibleTurns = turns.filter((t) => t.turn > 12);
+  const filteredTurns = turns
+    .filter((t) => t.turn > 12)
+    .map((turn) => ({
+      ...turn,
+      availableRaces: turn.availableRaces.filter((tr) =>
+        visibleGrades.includes(tr.race.grade)
+      ),
+    }));
+
+  const visibleTurns = filteredTurns;
 
   const years: Array<{ year: 1 | 2 | 3; turns: Turn[] }> = [
     { year: 1, turns: visibleTurns.filter((t) => t.year === 1) },

@@ -4,31 +4,28 @@ import { RewardsBox } from "./components/RewardsBox";
 import { SaveLoad } from "./components/SaveLoad";
 import { TooltipProvider } from "./components/Tooltip";
 import { usePlannerStore } from "./store/planner";
-import {
-  LayoutGrid,
-  List,
-  Calendar,
-  Trash2,
-  CheckSquare,
-  Square,
-} from "lucide-react";
-import { useState } from "react";
-import { cn } from "./utils";
-
-type ViewMode = "full" | "timeline" | "epithets";
+import { Trash2, CheckSquare, Square } from "lucide-react";
 
 function App() {
-  const [viewMode, setViewMode] = useState<ViewMode>("full");
   const {
     getSelectedRaces,
     getConsecutiveRaceTurns,
     clearAllRaces,
     selectAllEpithets,
     clearEpithets,
+    getVisibleGrades,
+    toggleGrade,
   } = usePlannerStore();
 
   const selectedRaces = getSelectedRaces();
   const consecutiveTurns = getConsecutiveRaceTurns();
+  const visibleGrades = getVisibleGrades();
+
+  const gradeLabels: Record<number, string> = {
+    100: "G1",
+    200: "G2",
+    300: "G3",
+  };
 
   return (
     <TooltipProvider>
@@ -66,43 +63,25 @@ function App() {
             </div>
 
             <div className="flex items-center gap-3 mt-6">
-              <div className="flex rounded-md shadow-sm" role="group">
-                <button
-                  onClick={() => setViewMode("full")}
-                  className={cn(
-                    "flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-l-md border transition-colors duration-150",
-                    viewMode === "full"
-                      ? "bg-slate-900 text-white border-slate-900"
-                      : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50",
-                  )}
-                >
-                  <LayoutGrid className="w-4 h-4" />
-                  Full
-                </button>
-                <button
-                  onClick={() => setViewMode("timeline")}
-                  className={cn(
-                    "flex items-center gap-2 px-4 py-2 text-sm font-medium border-t border-b transition-colors duration-150",
-                    viewMode === "timeline"
-                      ? "bg-slate-900 text-white border-slate-900"
-                      : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50",
-                  )}
-                >
-                  <Calendar className="w-4 h-4" />
-                  Timeline
-                </button>
-                <button
-                  onClick={() => setViewMode("epithets")}
-                  className={cn(
-                    "flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-r-md border transition-colors duration-150",
-                    viewMode === "epithets"
-                      ? "bg-slate-900 text-white border-slate-900"
-                      : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50",
-                  )}
-                >
-                  <List className="w-4 h-4" />
-                  Epithets
-                </button>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-slate-600">Show:</span>
+                {[100, 200, 300].map((grade) => (
+                  <button
+                    key={grade}
+                    onClick={() => toggleGrade(grade)}
+                    className={`px-3 py-1 text-sm font-medium rounded-md border transition-colors duration-150 ${
+                      visibleGrades.includes(grade)
+                        ? grade === 100
+                          ? "bg-yellow-50 border-yellow-300 text-yellow-700"
+                          : grade === 200
+                            ? "bg-slate-100 border-slate-300 text-slate-700"
+                            : "bg-orange-50 border-orange-300 text-orange-700"
+                        : "bg-slate-50 border-slate-200 text-slate-400"
+                    }`}
+                  >
+                    {gradeLabels[grade]}
+                  </button>
+                ))}
               </div>
 
               <div className="flex-1" />
@@ -136,35 +115,23 @@ function App() {
 
         <main className="p-6">
           <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-6">
-            {(viewMode === "full" || viewMode === "timeline") && (
-              <div className={viewMode === "full" ? "flex-1" : "w-full"}>
-                <TurnTimeline />
+            <div className="flex-1">
+              <TurnTimeline />
+            </div>
+
+            <div className="w-full lg:w-80 shrink-0 space-y-4 lg:sticky lg:top-6 lg:self-start">
+              <div className="bg-white rounded-lg border border-slate-200 p-5">
+                <RewardsBox />
               </div>
-            )}
 
-            {viewMode === "full" && (
-              <div className="w-full lg:w-80 shrink-0 space-y-4 lg:sticky lg:top-6 lg:self-start">
-                <div className="bg-white rounded-lg border border-slate-200 p-5">
-                  <RewardsBox />
-                </div>
-
-                <div className="bg-white rounded-lg border border-slate-200 p-5">
-                  <EpithetTracker />
-                </div>
-
-                <div className="bg-white rounded-lg border border-slate-200 p-5">
-                  <SaveLoad />
-                </div>
+              <div className="bg-white rounded-lg border border-slate-200 p-5">
+                <EpithetTracker />
               </div>
-            )}
 
-            {viewMode === "epithets" && (
-              <div className="max-w-2xl mx-auto">
-                <div className="bg-white rounded-lg border border-slate-200 p-5">
-                  <EpithetTracker />
-                </div>
+              <div className="bg-white rounded-lg border border-slate-200 p-5">
+                <SaveLoad />
               </div>
-            )}
+            </div>
           </div>
         </main>
       </div>
