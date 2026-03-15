@@ -35,10 +35,10 @@ function App() {
             <div className="flex items-start justify-between">
               <div>
                 <h1 className="text-2xl font-semibold text-slate-900 tracking-tight">
-                  Uma Musume Planner
+                  Scheduleblazer
                 </h1>
                 <p className="text-sm text-slate-500 mt-1">
-                  Schedule races to maximize epithets across 60 turns
+                  Plan out Umamusume Trackblazer races and optimise epithets
                 </p>
               </div>
 
