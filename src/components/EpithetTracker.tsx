@@ -28,10 +28,14 @@ export function EpithetTracker() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Target className="w-5 h-5 text-slate-400" />
-          <h2 className="text-base font-semibold text-slate-900 dark:text-white">Epithets</h2>
+          <h2 className="text-base font-semibold text-slate-900 dark:text-white">
+            Epithets
+          </h2>
         </div>
         <div className="flex items-center gap-3 text-sm">
-          <span className="text-slate-500 dark:text-slate-400">{selectedCount} selected</span>
+          <span className="text-slate-500 dark:text-slate-400">
+            {selectedCount} selected
+          </span>
           <span className="px-2 py-0.5 bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 rounded-full font-medium text-xs">
             {completedCount}/{totalCount}
           </span>

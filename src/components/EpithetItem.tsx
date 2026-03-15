@@ -13,10 +13,28 @@ interface EpithetItemProps {
   onClick?: () => void;
 }
 
-const rankColors: Record<1 | 2 | 3, { bg: string; text: string; bgDark: string; textDark: string }> = {
-  1: { bg: "bg-amber-50", text: "text-amber-700", bgDark: "dark:bg-amber-900/40", textDark: "dark:text-amber-400" },
-  2: { bg: "bg-slate-50", text: "text-slate-600", bgDark: "dark:bg-slate-700", textDark: "dark:text-slate-300" },
-  3: { bg: "bg-yellow-50", text: "text-yellow-700", bgDark: "dark:bg-yellow-900/40", textDark: "dark:text-yellow-400" },
+const rankColors: Record<
+  1 | 2 | 3,
+  { bg: string; text: string; bgDark: string; textDark: string }
+> = {
+  1: {
+    bg: "bg-amber-50",
+    text: "text-amber-700",
+    bgDark: "dark:bg-amber-900/40",
+    textDark: "dark:text-amber-400",
+  },
+  2: {
+    bg: "bg-slate-50",
+    text: "text-slate-600",
+    bgDark: "dark:bg-slate-700",
+    textDark: "dark:text-slate-300",
+  },
+  3: {
+    bg: "bg-yellow-50",
+    text: "text-yellow-700",
+    bgDark: "dark:bg-yellow-900/40",
+    textDark: "dark:text-yellow-400",
+  },
 };
 
 const rankLabels: Record<1 | 2 | 3, string> = {
@@ -80,7 +98,9 @@ export function EpithetItem({
           >
             {rankLabels[rank]}
           </span>
-          <span className="font-medium text-slate-800 dark:text-slate-200 truncate">{name}</span>
+          <span className="font-medium text-slate-800 dark:text-slate-200 truncate">
+            {name}
+          </span>
         </div>
         <div className="flex items-center gap-2 shrink-0">
           {showProgress && (

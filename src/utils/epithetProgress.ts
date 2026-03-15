@@ -5,10 +5,7 @@ import {
   type SelectedRace,
 } from "@/data/epithetRequirements";
 export { getDistanceCategory } from "@/data/epithetRequirements";
-export type {
-  SelectedRace,
-  EpithetProgress,
-} from "@/data/epithetRequirements";
+export type { SelectedRace, EpithetProgress } from "@/data/epithetRequirements";
 
 export function calculateEpithetProgress(
   selectedRaces: SelectedRace[],

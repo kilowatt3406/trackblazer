@@ -12,7 +12,13 @@ import {
 
 const statConfig: Record<
   StatType,
-  { label: string; icon: typeof Zap; color: string; bgColor: string; bgColorDark: string }
+  {
+    label: string;
+    icon: typeof Zap;
+    color: string;
+    bgColor: string;
+    bgColorDark: string;
+  }
 > = {
   speed: {
     label: "Speed",
@@ -61,8 +67,12 @@ export function StatsDashboard() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-base font-semibold text-slate-900 dark:text-white">Stats</h2>
-        <span className="text-sm text-slate-500 dark:text-slate-400">{totalRaces} races</span>
+        <h2 className="text-base font-semibold text-slate-900 dark:text-white">
+          Stats
+        </h2>
+        <span className="text-sm text-slate-500 dark:text-slate-400">
+          {totalRaces} races
+        </span>
       </div>
 
       <div className="grid grid-cols-5 gap-3">

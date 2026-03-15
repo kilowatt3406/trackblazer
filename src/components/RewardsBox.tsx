@@ -67,13 +67,17 @@ export function RewardsBox() {
     <div className="space-y-4">
       <div className="flex items-center gap-2">
         <Trophy className="w-5 h-5 text-amber-500" />
-        <h2 className="text-base font-semibold text-slate-900 dark:text-white">Rewards</h2>
+        <h2 className="text-base font-semibold text-slate-900 dark:text-white">
+          Rewards
+        </h2>
       </div>
 
       <div className="space-y-3">
         {totalStatValue > 0 && (
           <div className="flex items-center justify-between">
-            <span className="text-sm text-slate-600 dark:text-slate-400">Total Stats</span>
+            <span className="text-sm text-slate-600 dark:text-slate-400">
+              Total Stats
+            </span>
             <span className="text-sm font-medium text-slate-900 dark:text-white">
               +{totalStatValue}
             </span>
@@ -84,13 +88,19 @@ export function RewardsBox() {
           <div className="pt-2 border-t border-slate-100 dark:border-slate-700">
             <div className="flex items-center gap-2 mb-2">
               <BookOpen className="w-4 h-4 text-purple-500" />
-              <span className="text-sm text-slate-600 dark:text-slate-400">Skills</span>
+              <span className="text-sm text-slate-600 dark:text-slate-400">
+                Skills
+              </span>
             </div>
             <div className="flex flex-col gap-1">
               {skills.map((skill) => (
                 <div key={skill.id} className="flex justify-between text-sm">
-                  <span className="text-slate-700 dark:text-slate-300">{skill.name}</span>
-                  <span className="text-slate-500 dark:text-slate-400">+{skill.hints}</span>
+                  <span className="text-slate-700 dark:text-slate-300">
+                    {skill.name}
+                  </span>
+                  <span className="text-slate-500 dark:text-slate-400">
+                    +{skill.hints}
+                  </span>
                 </div>
               ))}
             </div>
@@ -124,7 +134,9 @@ export function RewardsBox() {
         {totalStatValue === 0 &&
           skills.length === 0 &&
           completedEpithets.length === 0 && (
-            <div className="text-sm text-slate-400 dark:text-slate-500">No rewards yet</div>
+            <div className="text-sm text-slate-400 dark:text-slate-500">
+              No rewards yet
+            </div>
           )}
       </div>
     </div>

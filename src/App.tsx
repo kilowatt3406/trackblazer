@@ -47,7 +47,9 @@ function App() {
                   <div className="text-2xl font-semibold text-slate-900 dark:text-white">
                     {selectedRaces.length}
                   </div>
-                  <div className="text-xs text-slate-500 dark:text-slate-400">races selected</div>
+                  <div className="text-xs text-slate-500 dark:text-slate-400">
+                    races selected
+                  </div>
                 </div>
                 {consecutiveTurns.length > 0 && (
                   <div className="px-3 py-2 bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-700 rounded-md text-right">
@@ -64,7 +66,9 @@ function App() {
 
             <div className="flex items-center gap-3 mt-6">
               <div className="flex items-center gap-2">
-                <span className="text-sm text-slate-600 dark:text-slate-300">Show:</span>
+                <span className="text-sm text-slate-600 dark:text-slate-300">
+                  Show:
+                </span>
                 {[100, 200, 300].map((grade) => (
                   <button
                     key={grade}
@@ -108,7 +112,6 @@ function App() {
                   <Square className="w-4 h-4" />
                   Clear All
                 </button>
-
               </div>
             </div>
           </div>

@@ -139,7 +139,8 @@ function TurnRow({
 }
 
 export function TurnTimeline() {
-  const { turns, getConsecutiveRaceTurns, getVisibleGrades } = usePlannerStore();
+  const { turns, getConsecutiveRaceTurns, getVisibleGrades } =
+    usePlannerStore();
   const consecutiveTurns = getConsecutiveRaceTurns();
   const consecutiveSet = new Set(consecutiveTurns);
   const visibleGrades = getVisibleGrades();
@@ -149,7 +150,7 @@ export function TurnTimeline() {
     .map((turn) => ({
       ...turn,
       availableRaces: turn.availableRaces.filter((tr) =>
-        visibleGrades.includes(tr.race.grade)
+        visibleGrades.includes(tr.race.grade),
       ),
     }));
 

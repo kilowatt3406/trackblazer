@@ -49,7 +49,9 @@ export function SaveLoad() {
     <div className="space-y-4">
       <div className="flex items-center gap-2">
         <Save className="w-5 h-5 text-slate-400" />
-        <h2 className="text-base font-semibold text-slate-900 dark:text-white">Save / Load</h2>
+        <h2 className="text-base font-semibold text-slate-900 dark:text-white">
+          Save / Load
+        </h2>
       </div>
 
       <div className="flex gap-2">
