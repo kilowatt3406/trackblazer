@@ -45,7 +45,9 @@ export function EpithetTracker() {
       <div className="space-y-1 max-h-96 overflow-y-auto pr-1 [&>*]:overflow-visible">
         {epithetProgressList
           .sort((a, b) => {
-            if (a.met !== b.met) return a.met ? -1 : 1;
+            const aPct = a.target > 0 ? a.progress / a.target : 0;
+            const bPct = b.target > 0 ? b.progress / b.target : 0;
+            if (aPct !== bPct) return bPct - aPct;
             if (a.epithet.rank !== b.epithet.rank)
               return b.epithet.rank - a.epithet.rank;
             const aName = a.epithet.name_en_gl || a.epithet.name_en;
