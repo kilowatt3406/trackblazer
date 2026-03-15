@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { getEpithet, type SelectedRace } from "../data/epithetRequirements";
-import { Race } from "../types";
+import { getEpithet, type SelectedRace } from "@/data/epithetRequirements";
+import { Race } from "@/types";
 
 const createRace = (overrides: Partial<Race> = {}): Race => ({
   id: 100001,

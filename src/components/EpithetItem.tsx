@@ -1,4 +1,4 @@
-import { cn } from "../utils";
+import { cn } from "@/utils";
 import { Check } from "lucide-react";
 import { useTooltip } from "./Tooltip";
 

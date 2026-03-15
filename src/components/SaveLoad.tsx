@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
-import { usePlannerStore } from "../store/planner";
-import { cn } from "../utils";
+import { usePlannerStore } from "@/store/planner";
+import { cn } from "@/utils";
 import { Download, Save, FolderOpen } from "lucide-react";
 
 export function SaveLoad() {

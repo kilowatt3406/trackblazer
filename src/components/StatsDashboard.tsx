@@ -1,6 +1,6 @@
-import { usePlannerStore } from "../store/planner";
-import { StatType } from "../types";
-import { cn } from "../utils";
+import { usePlannerStore } from "@/store/planner";
+import { StatType } from "@/types";
+import { cn } from "@/utils";
 import {
   Zap,
   Heart,

@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import { Turn, Plan, StatType, Race } from "../types";
-import { turns as initialTurns, trailblazerEpithets } from "../data/turns";
+import { Turn, Plan, StatType, Race } from "@/types";
+import { turns as initialTurns, trailblazerEpithets } from "@/data/turns";
 
 interface PlannerState {
   turns: Turn[];

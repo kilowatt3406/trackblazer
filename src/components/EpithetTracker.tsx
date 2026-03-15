@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import { usePlannerStore } from "../store/planner";
+import { usePlannerStore } from "@/store/planner";
 import { Target } from "lucide-react";
-import { calculateEpithetProgress } from "../utils/epithetProgress";
+import { calculateEpithetProgress } from "@/utils/epithetProgress";
 import { EpithetItem } from "./EpithetItem";
 
 export function EpithetTracker() {

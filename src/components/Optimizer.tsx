@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
-import { usePlannerStore, trailblazerEpithets } from "../store/planner";
-import { cn } from "../utils";
+import { usePlannerStore, trailblazerEpithets } from "@/store/planner";
+import { cn } from "@/utils";
 import { Wand2, Loader2, Sparkles } from "lucide-react";
 
 interface OptimizationResult {

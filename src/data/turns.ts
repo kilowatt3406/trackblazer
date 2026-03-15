@@ -1,7 +1,7 @@
-import { Race, Turn } from "../types";
-import racesData from "../../races.89f8ddb7.json";
-import uraRacesData from "../../ura-races.eb136000.json";
-import nicknamesData from "../../nicknames.71b3472b.json";
+import { Race, Turn } from "@/types";
+import racesData from "@/data/races.89f8ddb7.json";
+import uraRacesData from "@/data/ura-races.eb136000.json";
+import nicknamesData from "@/data/nicknames.71b3472b.json";
 
 const races: Race[] = racesData as Race[];
 const uraRaces: any[] = uraRacesData;

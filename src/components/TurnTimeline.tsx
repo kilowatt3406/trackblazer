@@ -1,6 +1,6 @@
-import { usePlannerStore } from "../store/planner";
-import { cn, getMonthName, getGradeLabel, getTerrainLabel } from "../utils";
-import { Turn } from "../types";
+import { usePlannerStore } from "@/store/planner";
+import { cn, getMonthName, getGradeLabel, getTerrainLabel } from "@/utils";
+import { Turn } from "@/types";
 import { AlertTriangle, X, Ban } from "lucide-react";
 
 function TurnRow({

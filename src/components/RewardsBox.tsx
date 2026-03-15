@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import { usePlannerStore } from "../store/planner";
-import { skillNames } from "../data/epithetRequirements";
-import { calculateEpithetProgress } from "../utils/epithetProgress";
+import { usePlannerStore } from "@/store/planner";
+import { skillNames } from "@/data/epithetRequirements";
+import { calculateEpithetProgress } from "@/utils/epithetProgress";
 import { Trophy, Star, BookOpen } from "lucide-react";
 import { EpithetItem } from "./EpithetItem";
 

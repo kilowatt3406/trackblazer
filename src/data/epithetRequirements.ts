@@ -1,4 +1,4 @@
-import type { Race } from "../types";
+import type { Race } from "@/types";
 
 export interface SelectedRace {
   uraId: string;
