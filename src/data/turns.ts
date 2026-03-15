@@ -7,8 +7,18 @@ const races: Race[] = racesData as Race[];
 const uraRaces: any[] = uraRacesData;
 const nicknames: any[] = nicknamesData;
 
+const futureTracks = [
+  10103, // Kawasaki
+  10104, // Kashiwa
+  10105, // Morioka
+  10201, // Longchamp
+];
 const g123Races = races.filter(
-  (r) => [100, 200, 300].includes(r.grade) && r.name_en && r.terrain,
+  (r) =>
+    [100, 200, 300].includes(r.grade) &&
+    r.name_en &&
+    r.terrain &&
+    !futureTracks.includes(r.track),
 );
 
 const raceMap = new Map<number, Race>();
