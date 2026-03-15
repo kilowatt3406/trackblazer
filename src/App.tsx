@@ -1,7 +1,6 @@
 import { TurnTimeline } from "./components/TurnTimeline";
 import { EpithetTracker } from "./components/EpithetTracker";
 import { RewardsBox } from "./components/RewardsBox";
-import { Optimizer } from "./components/Optimizer";
 import { SaveLoad } from "./components/SaveLoad";
 import { TooltipProvider } from "./components/Tooltip";
 import { usePlannerStore } from "./store/planner";
@@ -151,10 +150,6 @@ function App() {
 
                 <div className="bg-white rounded-lg border border-slate-200 p-5">
                   <EpithetTracker />
-                </div>
-
-                <div className="bg-white rounded-lg border border-slate-200 p-5">
-                  <Optimizer />
                 </div>
 
                 <div className="bg-white rounded-lg border border-slate-200 p-5">
