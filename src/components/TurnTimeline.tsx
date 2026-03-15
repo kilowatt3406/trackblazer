@@ -115,7 +115,7 @@ function TurnRow({
           {isConsecutive && (
             <span className="flex items-center gap-1 text-xs font-medium text-amber-600 bg-amber-100 px-2 py-1 rounded">
               <AlertTriangle className="w-3 h-3" />
-              3+ consecutive
+              Fatigue
             </span>
           )}
           {selectedRace && (
