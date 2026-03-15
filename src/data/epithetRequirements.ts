@@ -125,11 +125,6 @@ const anyEpithet = (...names: string[]) =>
     1,
     names.map((n) => epithetNameMap[n]),
   );
-const allEpithets = (...names: string[]) =>
-  epithetCount(
-    names.length,
-    names.map((n) => epithetNameMap[n]),
-  );
 
 function trackCount(target: number, tracks: number[]): EpithetMatcher {
   return (races) => {
@@ -210,8 +205,9 @@ export const epithetRequirements: EpithetDefinition[] = [
       "Obtain the Spring Champion and Fall Champion epithets, and either the Stunning or Lady epithet.",
     check: (races) =>
       all(
-        allEpithets("Stunning", "Lady"),
-        anyEpithet("Spring Champion", "Fall Champion"),
+        anyEpithet("Spring Champion"),
+        anyEpithet("Fall Champion"),
+        anyEpithet("Stunning", "Lady"),
       )(races),
     rewards: [{ t: "sk", d: 200512, v: "+1" }],
   },
