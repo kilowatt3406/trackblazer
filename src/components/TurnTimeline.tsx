@@ -1,14 +1,22 @@
-import { usePlannerStore } from '../store/planner';
-import { cn, getMonthName, getGradeLabel, getTerrainLabel } from '../utils';
-import { Turn } from '../types';
-import { AlertTriangle, X, Ban } from 'lucide-react';
+import { usePlannerStore } from "../store/planner";
+import { cn, getMonthName, getGradeLabel, getTerrainLabel } from "../utils";
+import { Turn } from "../types";
+import { AlertTriangle, X, Ban } from "lucide-react";
 
-function TurnRow({ turn, consecutiveTurns }: { turn: Turn; consecutiveTurns: boolean }) {
+function TurnRow({
+  turn,
+  consecutiveTurns,
+}: {
+  turn: Turn;
+  consecutiveTurns: boolean;
+}) {
   const { selectRace, clearTurn } = usePlannerStore();
-  
+
   const hasRaces = turn.availableRaces.length > 0;
   const selectedRaceId = turn.selectedRaceIds[0];
-  const selectedRace = selectedRaceId ? turn.availableRaces.find(tr => tr.race.id === selectedRaceId) : null;
+  const selectedRace = selectedRaceId
+    ? turn.availableRaces.find((tr) => tr.race.id === selectedRaceId)
+    : null;
   const isConsecutive = consecutiveTurns;
 
   const handleRaceSelect = (raceId: number) => {
@@ -20,27 +28,33 @@ function TurnRow({ turn, consecutiveTurns }: { turn: Turn; consecutiveTurns: boo
   };
 
   return (
-    <div className={cn(
-      "border-b border-slate-100 last:border-b-0 transition-colors duration-150",
-      isConsecutive ? "bg-amber-50/50" : hasRaces ? "bg-white" : "bg-slate-50"
-    )}>
+    <div
+      className={cn(
+        "border-b border-slate-100 last:border-b-0 transition-colors duration-150",
+        isConsecutive
+          ? "bg-amber-50/50"
+          : hasRaces
+            ? "bg-white"
+            : "bg-slate-50",
+      )}
+    >
       <div className="flex items-center px-4 py-3">
         <div className="w-20 shrink-0">
           <span className="text-sm font-semibold text-slate-700">
             Turn {turn.turn}
           </span>
         </div>
-        
+
         <div className="w-40 shrink-0">
           <span className="text-sm text-slate-500">
-            {getMonthName(turn.month)} ({turn.half === 1 ? '1st' : '2nd'})
+            {getMonthName(turn.month)} ({turn.half === 1 ? "1st" : "2nd"})
           </span>
         </div>
-        
+
         <div className="flex-1 min-w-0">
           {hasRaces ? (
             <div className="flex flex-wrap gap-2">
-              {turn.availableRaces.map(turnRace => (
+              {turn.availableRaces.map((turnRace) => (
                 <button
                   key={turnRace.race.id}
                   onClick={() => handleRaceSelect(turnRace.race.id)}
@@ -48,24 +62,43 @@ function TurnRow({ turn, consecutiveTurns }: { turn: Turn; consecutiveTurns: boo
                     "flex items-center gap-2 px-3 py-1.5 text-sm rounded-md border transition-all duration-150 cursor-pointer",
                     turnRace.race.id === selectedRaceId
                       ? "bg-blue-600 border-blue-600 text-white shadow-sm"
-                      : "border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-700"
+                      : "border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-700",
                   )}
                 >
-                  <span className={cn(
-                    "font-semibold text-xs",
-                    turnRace.race.id === selectedRaceId 
-                      ? "text-white/80" 
-                      : turnRace.race.grade === 100 ? "text-yellow-700" :
-                      turnRace.race.grade === 200 ? "text-slate-600" :
-                      "text-orange-700"
-                  )}>
+                  <span
+                    className={cn(
+                      "font-semibold text-xs",
+                      turnRace.race.id === selectedRaceId
+                        ? "text-white/80"
+                        : turnRace.race.grade === 100
+                          ? "text-yellow-700"
+                          : turnRace.race.grade === 200
+                            ? "text-slate-600"
+                            : "text-orange-700",
+                    )}
+                  >
                     {getGradeLabel(turnRace.race.grade)}
                   </span>
-                  <span className={cn("font-medium", turnRace.race.id === selectedRaceId ? "text-white" : "text-slate-800")}>
+                  <span
+                    className={cn(
+                      "font-medium",
+                      turnRace.race.id === selectedRaceId
+                        ? "text-white"
+                        : "text-slate-800",
+                    )}
+                  >
                     {turnRace.race.name_en}
                   </span>
-                  <span className={cn("text-xs", turnRace.race.id === selectedRaceId ? "text-blue-200" : "text-slate-400")}>
-                    {getTerrainLabel(turnRace.race.terrain)} · {turnRace.race.distance}m
+                  <span
+                    className={cn(
+                      "text-xs",
+                      turnRace.race.id === selectedRaceId
+                        ? "text-blue-200"
+                        : "text-slate-400",
+                    )}
+                  >
+                    {getTerrainLabel(turnRace.race.terrain)} ·{" "}
+                    {turnRace.race.distance}m
                   </span>
                 </button>
               ))}
@@ -77,7 +110,7 @@ function TurnRow({ turn, consecutiveTurns }: { turn: Turn; consecutiveTurns: boo
             </div>
           )}
         </div>
-        
+
         <div className="w-32 shrink-0 flex items-center justify-end gap-2">
           {isConsecutive && (
             <span className="flex items-center gap-1 text-xs font-medium text-amber-600 bg-amber-100 px-2 py-1 rounded">
@@ -104,19 +137,22 @@ export function TurnTimeline() {
   const { turns, getConsecutiveRaceTurns } = usePlannerStore();
   const consecutiveTurns = getConsecutiveRaceTurns();
   const consecutiveSet = new Set(consecutiveTurns);
-  
-  const visibleTurns = turns.filter(t => t.turn > 12);
-  
+
+  const visibleTurns = turns.filter((t) => t.turn > 12);
+
   const years: Array<{ year: 1 | 2 | 3; turns: Turn[] }> = [
-    { year: 1, turns: visibleTurns.filter(t => t.year === 1) },
-    { year: 2, turns: visibleTurns.filter(t => t.year === 2) },
-    { year: 3, turns: visibleTurns.filter(t => t.year === 3) },
+    { year: 1, turns: visibleTurns.filter((t) => t.year === 1) },
+    { year: 2, turns: visibleTurns.filter((t) => t.year === 2) },
+    { year: 3, turns: visibleTurns.filter((t) => t.year === 3) },
   ];
 
   return (
     <div className="space-y-4">
       {years.map(({ year, turns: yearTurns }) => (
-        <div key={year} className="border border-slate-200 rounded-xl overflow-hidden bg-white shadow-sm">
+        <div
+          key={year}
+          className="border border-slate-200 rounded-xl overflow-hidden bg-white shadow-sm"
+        >
           <div className="bg-slate-100 px-4 py-3 font-semibold text-slate-800 border-b border-slate-200 flex items-center gap-4">
             <span className="w-20">Turn</span>
             <span className="w-40">Month</span>
@@ -124,10 +160,10 @@ export function TurnTimeline() {
             <span className="w-32 text-right">Status</span>
           </div>
           <div>
-            {yearTurns.map(turn => (
-              <TurnRow 
-                key={turn.turn} 
-                turn={turn} 
+            {yearTurns.map((turn) => (
+              <TurnRow
+                key={turn.turn}
+                turn={turn}
                 consecutiveTurns={consecutiveSet.has(turn.turn)}
               />
             ))}

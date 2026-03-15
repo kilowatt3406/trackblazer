@@ -1,24 +1,25 @@
-import { useMemo } from 'react';
-import { usePlannerStore } from '../store/planner';
-import { Target } from 'lucide-react';
-import { calculateEpithetProgress } from '../utils/epithetProgress';
-import { EpithetItem } from './EpithetItem';
+import { useMemo } from "react";
+import { usePlannerStore } from "../store/planner";
+import { Target } from "lucide-react";
+import { calculateEpithetProgress } from "../utils/epithetProgress";
+import { EpithetItem } from "./EpithetItem";
 
 export function EpithetTracker() {
-  const { selectedEpithetIds, toggleEpithet, getSelectedRaces } = usePlannerStore();
+  const { selectedEpithetIds, toggleEpithet, getSelectedRaces } =
+    usePlannerStore();
   const selectedRaces = getSelectedRaces();
-  
+
   const epithetProgressList = useMemo(() => {
-    const selectedWithUra = selectedRaces.map(sr => ({
+    const selectedWithUra = selectedRaces.map((sr) => ({
       uraId: sr.uraId,
       race: sr.race,
       year: sr.year,
     }));
-    
+
     return calculateEpithetProgress(selectedWithUra);
   }, [selectedRaces]);
 
-  const completedCount = epithetProgressList.filter(p => p.met).length;
+  const completedCount = epithetProgressList.filter((p) => p.met).length;
   const totalCount = epithetProgressList.length;
   const selectedCount = selectedEpithetIds.length;
 
@@ -36,16 +37,17 @@ export function EpithetTracker() {
           </span>
         </div>
       </div>
-      
+
       <div className="text-xs text-slate-500">
         Click to select target epithets. Progress updates as you select races.
       </div>
-      
+
       <div className="space-y-1 max-h-96 overflow-y-auto pr-1">
         {epithetProgressList
           .sort((a, b) => {
             if (a.met !== b.met) return a.met ? -1 : 1;
-            if (a.epithet.rank !== b.epithet.rank) return b.epithet.rank - a.epithet.rank;
+            if (a.epithet.rank !== b.epithet.rank)
+              return b.epithet.rank - a.epithet.rank;
             const aName = a.epithet.name_en_gl || a.epithet.name_en;
             const bName = b.epithet.name_en_gl || b.epithet.name_en;
             return aName.localeCompare(bName);
@@ -53,7 +55,7 @@ export function EpithetTracker() {
           .map(({ epithet, met, progress, target }) => {
             const isSelected = selectedEpithetIds.includes(epithet.id);
             const name = epithet.name_en_gl || epithet.name_en;
-            
+
             return (
               <EpithetItem
                 key={epithet.id}

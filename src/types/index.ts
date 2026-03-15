@@ -25,7 +25,7 @@ export interface Race {
   url_name: string;
 }
 
-export type StatType = 'speed' | 'stamina' | 'power' | 'guts' | 'wisdom';
+export type StatType = "speed" | "stamina" | "power" | "guts" | "wisdom";
 
 export interface TurnRace {
   race: Race;
